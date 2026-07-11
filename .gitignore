@@ -14,8 +14,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+/lib/
+/lib64/
 parts/
 sdist/
 var/
@@ -216,3 +216,40 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Java / Gradle
+.gradle/
+**/build/
+!**/src/**/build/
+*.class
+*.jar
+!**/gradle/wrapper/gradle-wrapper.jar
+hs_err_pid*
+
+# Node / Next.js / Playwright
+node_modules/
+.next/
+out/
+coverage/
+playwright-report/
+test-results/
+blob-report/
+*.tsbuildinfo
+.pnpm-store/
+
+# Local media and runtime data
+data/
+uploads/
+backend/media/
+
+# Environment files (templates stay tracked)
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

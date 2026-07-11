@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --font-sans: var(--font-sans-stack);
+}
+
+:root {
+  --canvas: #f7f9fc;
+  --surface: #ffffff;
+  --ink: #122033;
+  --muted: #607086;
+  --line: #dfe7f1;
+  --accent: #0f7b8e;
+  --accent-strong: #075f70;
+  --font-sans-stack: Inter, Pretendard, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  background:
+    radial-gradient(circle at 78% 10%, rgb(201 238 243 / 45%), transparent 28rem),
+    var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans-stack);
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: #b9e8ef;
+  color: #0b3440;
+}

@@ -1,0 +1,15 @@
+.gradle/
+build/
+bin/
+out/
+
+.classpath
+.project
+.settings/
+.idea/
+*.iml
+
+*.log
+
+# The Wrapper JAR is source-controlled for reproducible Gradle execution.
+!gradle/wrapper/gradle-wrapper.jar
