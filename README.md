@@ -57,7 +57,21 @@ See [`.env.example`](.env.example) for the complete list. Important groups are:
 - Media: `MEDIA_STORAGE_PROVIDER` plus local-path or S3-compatible object-storage settings
 - Web origins: `NEXT_PUBLIC_API_BASE_URL`, `ALLOWED_ORIGINS`
 
-From Phase 1 onward, administrator bootstrap is disabled when its email or password is blank. Never commit a populated `.env` file.
+Administrator bootstrap runs only when the database has no users and both `ADMIN_EMAIL` and `ADMIN_PASSWORD` are explicitly set. The password must contain at least 12 characters and at most 72 UTF-8 bytes, and is stored with BCrypt cost 12. Remove `ADMIN_PASSWORD` from the runtime environment after the first account is created. Never commit a populated `.env` file.
+
+## Administrator authentication
+
+Open `/admin/login` after creating the first administrator. The browser requests a CSRF token, then sends credentialed requests using HttpOnly access and refresh cookies. Refresh tokens are rotated on use and only SHA-256 hashes are stored in PostgreSQL. The main endpoints are:
+
+```text
+GET  /api/auth/csrf
+POST /api/auth/login
+POST /api/auth/refresh
+POST /api/auth/logout
+GET  /api/auth/me
+```
+
+All `/api/admin/**` endpoints require an enabled administrator account. The frontend route guard prevents protected content from rendering before `/api/auth/me` succeeds, while the backend remains the final authorization boundary.
 
 ## Validation
 
@@ -101,12 +115,10 @@ docker-compose.yml        Reproducible local stack
 
 ## Security invariants
 
-The later feature phases must preserve these rules; Phase 0 only establishes the foundation that they build on.
-
-- Authentication will use secure cookies; tokens must not be stored in browser local storage.
-- Refresh tokens must be stored only as revocable hashes.
+- Authentication uses secure HttpOnly cookies; tokens are never stored in browser local storage.
+- Refresh tokens are stored only as revocable hashes and are rotated on refresh.
 - PostgreSQL will store media metadata, never image or PDF bytes.
-- The backend must remain the authority for admin, resume, PDF, and unpublished-media access.
+- The backend is the authority for admin, resume, PDF, and unpublished-media access.
 - Uploads must be validated by size, extension, declared MIME type, and file signature; storage keys must be server-generated.
 
 Deployment configuration is committed only as infrastructure metadata. This repository does not provision credentials or deploy to external services automatically.

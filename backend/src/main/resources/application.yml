@@ -30,3 +30,21 @@ springdoc:
     enabled: true
   swagger-ui:
     enabled: true
+
+app:
+  auth:
+    jwt-secret: ${JWT_SECRET}
+    issuer: ${JWT_ISSUER:ym-pf}
+    audience: ${JWT_AUDIENCE:ym-pf-admin}
+    access-token-ttl: ${ACCESS_TOKEN_TTL:PT15M}
+    refresh-token-ttl: ${REFRESH_TOKEN_TTL:P7D}
+    access-cookie-name: ${ACCESS_COOKIE_NAME:ympf_access}
+    refresh-cookie-name: ${REFRESH_COOKIE_NAME:ympf_refresh}
+    access-cookie-path: ${ACCESS_COOKIE_PATH:/}
+    refresh-cookie-path: ${REFRESH_COOKIE_PATH:/api/auth}
+    cookie-secure: ${COOKIE_SECURE:true}
+    cookie-same-site: ${COOKIE_SAME_SITE:Lax}
+    admin-email: ${ADMIN_EMAIL:}
+    admin-password: ${ADMIN_PASSWORD:}
+  web:
+    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:3000}

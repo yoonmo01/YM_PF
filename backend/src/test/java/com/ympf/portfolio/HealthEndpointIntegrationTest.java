@@ -13,7 +13,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Import(PostgresTestContainerConfiguration.class)
-@SpringBootTest
+@SpringBootTest(properties = {
+		"app.auth.jwt-secret=health-test-only-secret-with-at-least-32-bytes",
+		"app.auth.cookie-secure=false"
+})
 @AutoConfigureMockMvc
 class HealthEndpointIntegrationTest {
 
