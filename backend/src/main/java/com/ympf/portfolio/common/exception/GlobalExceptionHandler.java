@@ -4,12 +4,15 @@ import java.time.Clock;
 import java.util.Comparator;
 import java.util.List;
 
+import jakarta.validation.ConstraintViolationException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -53,6 +56,16 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.badRequest().body(body);
 	}
 
+	@ExceptionHandler(ConstraintViolationException.class)
+	public ResponseEntity<ErrorResponse> constraintValidationFailed(ConstraintViolationException exception) {
+		List<FieldErrorResponse> fieldErrors = exception.getConstraintViolations().stream()
+				.map(violation -> new FieldErrorResponse(lastPathSegment(violation.getPropertyPath().toString()), violation.getMessage()))
+				.sorted(Comparator.comparing(FieldErrorResponse::field))
+				.toList();
+		return ResponseEntity.badRequest().body(new ErrorResponse(
+				"VALIDATION_FAILED", "Request validation failed", fieldErrors, clock.instant()));
+	}
+
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ErrorResponse> malformedRequest() {
 		return response(HttpStatus.BAD_REQUEST, "MALFORMED_REQUEST", "Request body is malformed");
@@ -63,6 +76,11 @@ public class GlobalExceptionHandler {
 		return response(HttpStatus.BAD_REQUEST, "INVALID_PARAMETER", "Request parameter is invalid");
 	}
 
+	@ExceptionHandler(MaxUploadSizeExceededException.class)
+	public ResponseEntity<ErrorResponse> uploadTooLarge() {
+		return response(HttpStatus.PAYLOAD_TOO_LARGE, "MEDIA_FILE_TOO_LARGE", "Uploaded file exceeds the size limit");
+	}
+
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorResponse> unexpectedError(Exception exception) {
 		LOGGER.error("Unhandled API error", exception);
@@ -71,5 +89,10 @@ public class GlobalExceptionHandler {
 
 	private ResponseEntity<ErrorResponse> response(HttpStatus status, String code, String message) {
 		return ResponseEntity.status(status).body(ErrorResponse.of(code, message, clock.instant()));
+	}
+
+	private String lastPathSegment(String path) {
+		int separator = path.lastIndexOf('.');
+		return separator < 0 ? path : path.substring(separator + 1);
 	}
 }

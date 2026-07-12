@@ -12,6 +12,7 @@ import com.ympf.portfolio.dashboard.DashboardDtos.DashboardResponse;
 import com.ympf.portfolio.dashboard.DashboardDtos.RecentItem;
 import com.ympf.portfolio.education.EducationRepository;
 import com.ympf.portfolio.experience.ExperienceRepository;
+import com.ympf.portfolio.media.MediaFileRepository;
 import com.ympf.portfolio.profile.ProfileRepository;
 import com.ympf.portfolio.project.ProjectRepository;
 import com.ympf.portfolio.project.ProjectStatus;
@@ -26,12 +27,14 @@ public class DashboardService {
 	private final EducationRepository educations;
 	private final SkillRepository skills;
 	private final CertificateRepository certificates;
+	private final MediaFileRepository mediaFiles;
 
 	public DashboardService(ProjectRepository projects, ProfileRepository profiles,
 			ExperienceRepository experiences, EducationRepository educations,
-			SkillRepository skills, CertificateRepository certificates) {
+			SkillRepository skills, CertificateRepository certificates, MediaFileRepository mediaFiles) {
 		this.projects = projects; this.profiles = profiles; this.experiences = experiences;
 		this.educations = educations; this.skills = skills; this.certificates = certificates;
+		this.mediaFiles = mediaFiles;
 	}
 
 	@Transactional(readOnly = true)
@@ -45,6 +48,6 @@ public class DashboardService {
 		certificates.findAll().forEach(item -> recent.add(new RecentItem("CERTIFICATE", item.getId(), item.getName(), item.getUpdatedAt())));
 		List<RecentItem> top = recent.stream().sorted(Comparator.comparing(RecentItem::updatedAt).reversed()).limit(10).toList();
 		return new DashboardResponse(projects.countByStatus(ProjectStatus.PUBLISHED),
-				projects.countByStatus(ProjectStatus.DRAFT), 0, 0, top);
+				projects.countByStatus(ProjectStatus.DRAFT), mediaFiles.count(), 0, top);
 	}
 }

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Container } from "@/components/layout/container";
 import { contentApi } from "./api";
 import { EmptyState, ErrorState, LoadingState } from "./query-state";
+import { ProjectCover } from "./project-media";
 
 export function PublicHome() {
   const profile = useQuery({ queryKey: ["public", "profile"], queryFn: contentApi.publicProfile });
@@ -40,7 +41,7 @@ export function PublicHome() {
             <div className="grid gap-5 md:grid-cols-2">
               {projects.data?.content.filter((item) => item.featured).slice(0, 4).map((project) => (
                 <Link className="group rounded-2xl border border-line bg-surface p-6 shadow-sm hover:border-accent" href={`/projects/${project.slug}`} key={project.slug}>
-                  <div className="mb-5 flex aspect-[16/7] items-center justify-center rounded-xl bg-canvas text-sm text-muted" role="img" aria-label={`${project.title} 대표 이미지 준비 중`}>대표 이미지 준비 중</div>
+                  <ProjectCover media={project.media} title={project.title} />
                   <h3 className="text-xl font-semibold group-hover:text-accent-strong">{project.title}</h3>
                   <p className="mt-3 line-clamp-3 text-sm leading-7 text-muted">{project.summary}</p>
                 </Link>

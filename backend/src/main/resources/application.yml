@@ -48,3 +48,18 @@ app:
     admin-password: ${ADMIN_PASSWORD:}
   web:
     allowed-origins: ${ALLOWED_ORIGINS:http://localhost:3000}
+  media:
+    provider: ${MEDIA_STORAGE_PROVIDER:local}
+    local-path: ${MEDIA_STORAGE_LOCAL_PATH:./data/media}
+    bucket: ${MEDIA_STORAGE_BUCKET:}
+    region: ${MEDIA_STORAGE_REGION:ap-northeast-2}
+    endpoint: ${MEDIA_STORAGE_ENDPOINT:}
+    access-key: ${MEDIA_STORAGE_ACCESS_KEY:}
+    secret-key: ${MEDIA_STORAGE_SECRET_KEY:}
+    max-file-size: ${MEDIA_MAX_FILE_SIZE:5242880}
+    max-width: ${MEDIA_MAX_WIDTH:8000}
+    max-height: ${MEDIA_MAX_HEIGHT:8000}
+
+spring.servlet.multipart:
+  max-file-size: 5MB
+  max-request-size: 6MB

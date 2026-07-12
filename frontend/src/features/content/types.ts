@@ -58,6 +58,10 @@ export type ProblemSolution = {
   displayOrder?: number;
 };
 
+export type PublicMedia = { mediaRole: "COVER" | "CONTENT" | "ARCHITECTURE" | "DASHBOARD" | "RESULT"; displayOrder: number; altText: string; caption: string | null; width: number; height: number; url: string };
+export type AdminMedia = { id: string; originalName: string; mimeType: string; fileSize: number; width: number; height: number; altText: string; caption: string | null; url: string; usageCount: number; createdAt: string; updatedAt: string };
+export type AdminProjectMedia = PublicMedia & { id: string; mediaId: string; originalName: string };
+
 export type PublicProject = {
   slug: string;
   title: string;
@@ -67,6 +71,7 @@ export type PublicProject = {
   featured: boolean;
   startDate: string | null;
   skills: ProjectSkill[];
+  media: PublicMedia[];
 };
 
 export type PublicProjectDetail = PublicProject & {

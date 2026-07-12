@@ -10,7 +10,12 @@ import type {
   PublicProject,
   PublicProjectDetail,
   Skill,
+  AdminMedia,
+  AdminProjectMedia,
 } from "./types";
+
+const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").replace(/\/$/, "");
+export function mediaUrl(path: string) { return `${API_BASE_URL}${path}`; }
 
 export const contentApi = {
   publicProfile: () => apiJson<Profile | null>("/api/public/profile", { refreshOnUnauthorized: false }),
@@ -32,6 +37,14 @@ export const contentApi = {
   saveProject: (id: string | null, body: unknown) => apiJson<AdminProject>(id ? `/api/admin/projects/${id}` : "/api/admin/projects", json(id ? "PUT" : "POST", body)),
   projectState: (id: string, state: "publish" | "archive") => apiJson<AdminProject>(`/api/admin/projects/${id}/${state}`, { method: "POST" }),
   removeProject: (id: string) => apiVoid(`/api/admin/projects/${id}`, { method: "DELETE" }),
+  media: () => apiJson<AdminMedia[]>("/api/admin/media"),
+  uploadMedia: (body: FormData) => apiJson<AdminMedia>("/api/admin/media", { method: "POST", body }),
+  updateMedia: (id: string, body: { altText: string; caption: string | null }) => apiJson<AdminMedia>(`/api/admin/media/${id}`, json("PUT", body)),
+  removeMedia: (id: string) => apiVoid(`/api/admin/media/${id}`, { method: "DELETE" }),
+  projectMedia: (projectId: string) => apiJson<AdminProjectMedia[]>(`/api/admin/projects/${projectId}/media`),
+  attachMedia: (projectId: string, body: { mediaId: string; mediaRole: string; displayOrder: number }) => apiJson<AdminProjectMedia>(`/api/admin/projects/${projectId}/media`, json("POST", body)),
+  reorderMedia: (projectId: string, items: Array<{ projectMediaId: string; displayOrder: number }>) => apiJson<AdminProjectMedia[]>(`/api/admin/projects/${projectId}/media/order`, json("PUT", { items })),
+  detachMedia: (projectId: string, id: string) => apiVoid(`/api/admin/projects/${projectId}/media/${id}`, { method: "DELETE" }),
 };
 
 function json(method: string, body: unknown): RequestInit {

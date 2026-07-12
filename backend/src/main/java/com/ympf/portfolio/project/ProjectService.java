@@ -21,6 +21,8 @@ import org.springframework.util.StringUtils;
 import com.ympf.portfolio.common.exception.ApiException;
 import com.ympf.portfolio.common.response.FieldErrorResponse;
 import com.ympf.portfolio.common.response.PageResponse;
+import com.ympf.portfolio.media.MediaDtos.PublicMediaResponse;
+import com.ympf.portfolio.media.MediaService;
 import com.ympf.portfolio.project.ProjectDtos.AdminProjectDetail;
 import com.ympf.portfolio.project.ProjectDtos.AdminProjectSummary;
 import com.ympf.portfolio.project.ProjectDtos.ProblemSolutionRequest;
@@ -41,14 +43,16 @@ public class ProjectService {
 	private final ProjectSkillRepository projectSkills;
 	private final ProjectProblemSolutionRepository problemSolutions;
 	private final SkillRepository skills;
+	private final MediaService mediaService;
 	private final Clock clock;
 
 	public ProjectService(ProjectRepository projects, ProjectSkillRepository projectSkills,
-			ProjectProblemSolutionRepository problemSolutions, SkillRepository skills, Clock clock) {
+			ProjectProblemSolutionRepository problemSolutions, SkillRepository skills, MediaService mediaService, Clock clock) {
 		this.projects = projects;
 		this.projectSkills = projectSkills;
 		this.problemSolutions = problemSolutions;
 		this.skills = skills;
+		this.mediaService = mediaService;
 		this.clock = clock;
 	}
 
@@ -136,10 +140,11 @@ public class ProjectService {
 		Page<Project> result = projects.searchPublic(skillId, featured, PageRequest.of(page, size,
 				Sort.by(Sort.Order.desc("featured"), Sort.Order.asc("displayOrder"), Sort.Order.desc("startDate"))));
 		Map<UUID, List<PublicSkillItem>> skillMap = publicSkillMap(result.getContent());
+		Map<UUID, List<PublicMediaResponse>> mediaMap = mediaService.publicMediaByProject(result.getContent().stream().map(Project::getId).toList());
 		List<PublicProjectSummary> content = result.getContent().stream()
 				.map(project -> new PublicProjectSummary(project.getSlug(), project.getTitle(), project.getSummary(),
 						project.getRole(), project.getResults(), project.isFeatured(), project.getStartDate(),
-						skillMap.getOrDefault(project.getId(), List.of())))
+						skillMap.getOrDefault(project.getId(), List.of()), mediaMap.getOrDefault(project.getId(), List.of())))
 				.toList();
 		return PageResponse.from(result, content);
 	}
@@ -153,7 +158,8 @@ public class ProjectService {
 				project.getProblem(), project.getGoal(), project.getRole(), project.getResponsibilities(),
 				project.getImplementation(), project.getTechnicalDecisions(), project.getResults(), project.getLimitations(),
 				project.getRetrospective(), project.getStartDate(), project.getEndDate(), project.getTeamSize(),
-				project.getGithubUrl(), project.getDemoUrl(), skillItems, publicProblemResponses(project.getId()));
+				project.getGithubUrl(), project.getDemoUrl(), skillItems, publicProblemResponses(project.getId()),
+				mediaService.publicMedia(project.getId()));
 	}
 
 	private void replaceChildren(Project project, ProjectRequest request) {

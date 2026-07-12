@@ -18,6 +18,7 @@ const sections = [
   ["기술", "/admin/skills"],
   ["자격증", "/admin/certificates"],
   ["프로젝트", "/admin/projects"],
+  ["미디어", "/admin/media"],
 ] as const;
 
 export function AdminShell({ children }: AdminShellProps) {

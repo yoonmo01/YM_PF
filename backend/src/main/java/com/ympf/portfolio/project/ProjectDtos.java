@@ -15,6 +15,7 @@ import jakarta.validation.constraints.Size;
 
 import com.ympf.portfolio.common.validation.HttpsUrl;
 import com.ympf.portfolio.common.validation.SafeText;
+import com.ympf.portfolio.media.MediaDtos.PublicMediaResponse;
 import com.ympf.portfolio.skill.SkillCategory;
 
 public final class ProjectDtos {
@@ -72,12 +73,12 @@ public final class ProjectDtos {
 
 	public record PublicProjectSummary(
 			String slug, String title, String summary, String role, String results,
-			boolean featured, LocalDate startDate, List<PublicSkillItem> skills) {}
+			boolean featured, LocalDate startDate, List<PublicSkillItem> skills, List<PublicMediaResponse> media) {}
 
 	public record PublicProjectDetail(
 			String slug, String title, String summary, String background, String problem, String goal,
 			String role, String responsibilities, String implementation, String technicalDecisions,
 			String results, String limitations, String retrospective, LocalDate startDate, LocalDate endDate,
 			Integer teamSize, String githubUrl, String demoUrl, List<PublicSkillItem> skills,
-			List<PublicProblemSolution> problemSolutions) {}
+			List<PublicProblemSolution> problemSolutions, List<PublicMediaResponse> media) {}
 }
