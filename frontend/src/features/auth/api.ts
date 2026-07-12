@@ -205,6 +205,10 @@ async function parseJson<T>(response: Response): Promise<T> {
     throw await toApiError(response);
   }
 
+  if (response.status === 204) {
+    return null as T;
+  }
+
   return (await response.json()) as T;
 }
 
@@ -212,6 +216,14 @@ async function expectSuccess(response: Response) {
   if (!response.ok) {
     throw await toApiError(response);
   }
+}
+
+export async function apiJson<T>(path: string, options: RequestOptions = {}) {
+  return parseJson<T>(await request(path, options));
+}
+
+export async function apiVoid(path: string, options: RequestOptions = {}) {
+  await expectSuccess(await request(path, options));
 }
 
 export async function login(credentials: { email: string; password: string }) {

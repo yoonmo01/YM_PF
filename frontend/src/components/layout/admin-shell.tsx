@@ -10,7 +10,15 @@ type AdminShellProps = {
   children: ReactNode;
 };
 
-const upcomingSections = ["프로젝트", "미디어", "회사별 이력서"] as const;
+const sections = [
+  ["대시보드", "/admin"],
+  ["프로필", "/admin/profile"],
+  ["경력", "/admin/experiences"],
+  ["학력·교육", "/admin/educations"],
+  ["기술", "/admin/skills"],
+  ["자격증", "/admin/certificates"],
+  ["프로젝트", "/admin/projects"],
+] as const;
 
 export function AdminShell({ children }: AdminShellProps) {
   const currentUser = useCurrentUser();
@@ -38,26 +46,9 @@ export function AdminShell({ children }: AdminShellProps) {
         </div>
 
         <nav aria-label="관리자 메뉴" className="px-4 py-4 lg:flex-1 lg:px-5 lg:py-6">
-          <ul className="grid gap-2 sm:grid-cols-2 lg:block lg:space-y-2">
-            <li>
-              <Link
-                aria-current="page"
-                className="flex min-h-11 items-center rounded-lg bg-accent/10 px-4 text-sm font-semibold text-accent-strong outline-offset-2 focus-visible:outline-2 focus-visible:outline-accent"
-                href="/admin"
-              >
-                대시보드
-              </Link>
-            </li>
-            {upcomingSections.map((label) => (
-              <li key={label}>
-                <span
-                  aria-disabled="true"
-                  className="flex min-h-11 cursor-not-allowed items-center justify-between rounded-lg px-4 text-sm font-medium text-muted/80"
-                >
-                  {label}
-                  <span className="text-[0.65rem] font-semibold tracking-wide uppercase">예정</span>
-                </span>
-              </li>
+          <ul className="grid gap-2 sm:grid-cols-2 lg:block lg:space-y-1">
+            {sections.map(([label, href]) => (
+              <li key={href}><Link className="flex min-h-10 items-center rounded-lg px-4 text-sm font-semibold text-muted hover:bg-accent/10 hover:text-accent-strong focus-visible:outline-2 focus-visible:outline-accent" href={href}>{label}</Link></li>
             ))}
           </ul>
         </nav>

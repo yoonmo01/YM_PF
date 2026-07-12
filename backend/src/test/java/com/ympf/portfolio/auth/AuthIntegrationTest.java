@@ -183,24 +183,27 @@ class AuthIntegrationTest {
 				.andExpect(jsonPath("$.email").value("admin@example.com"))
 				.andExpect(jsonPath("$.role").value("ADMIN"))
 				.andExpect(jsonPath("$.user").doesNotExist());
-		mockMvc.perform(get("/api/admin/auth-check"))
+		mockMvc.perform(get("/api/admin/dashboard"))
 				.andExpect(status().isUnauthorized())
 				.andExpect(jsonPath("$.code").value("AUTHENTICATION_REQUIRED"));
-		mockMvc.perform(get("/api/admin/auth-check").cookie(accessCookie))
+		mockMvc.perform(get("/api/admin/dashboard").cookie(accessCookie))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.status").value("ok"));
-		mockMvc.perform(get("/api/admin/auth-check").with(user("reader").roles("USER")))
+				.andExpect(jsonPath("$.publishedProjectCount").isNumber());
+		mockMvc.perform(get("/api/admin/dashboard").with(user("reader").roles("USER")))
 				.andExpect(status().isForbidden())
 				.andExpect(jsonPath("$.code").value("ACCESS_DENIED"));
-		mockMvc.perform(post("/api/admin/auth-check").cookie(accessCookie))
+		mockMvc.perform(post("/api/admin/projects").cookie(accessCookie))
 				.andExpect(status().isForbidden())
 				.andExpect(jsonPath("$.code").value("CSRF_INVALID"));
 
 		CsrfPair csrf = csrf();
-		mockMvc.perform(post("/api/admin/auth-check")
+		mockMvc.perform(post("/api/admin/projects")
 						.cookie(accessCookie, csrf.cookie())
-						.header(csrf.headerName(), csrf.token()))
-				.andExpect(status().isOk());
+						.header(csrf.headerName(), csrf.token())
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{}"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.code").value("MALFORMED_REQUEST"));
 	}
 
 	@Test
