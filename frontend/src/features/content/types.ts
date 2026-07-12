@@ -59,7 +59,7 @@ export type ProblemSolution = {
 };
 
 export type PublicMedia = { mediaRole: "COVER" | "CONTENT" | "ARCHITECTURE" | "DASHBOARD" | "RESULT"; displayOrder: number; altText: string; caption: string | null; width: number; height: number; url: string };
-export type AdminMedia = { id: string; originalName: string; mimeType: string; fileSize: number; width: number; height: number; altText: string; caption: string | null; url: string; usageCount: number; createdAt: string; updatedAt: string };
+export type AdminMedia = { id: string; originalName: string; mimeType: string; fileSize: number; width: number | null; height: number | null; altText: string; caption: string | null; url: string; usageCount: number; createdAt: string; updatedAt: string };
 export type AdminProjectMedia = PublicMedia & { id: string; mediaId: string; originalName: string };
 
 export type PublicProject = {
@@ -112,3 +112,11 @@ export type Dashboard = {
   resumeCount: number;
   recentItems: Array<{ type: string; id: string; title: string; updatedAt: string }>;
 };
+
+export type ResumeStatus = "DRAFT" | "READY" | "SUBMITTED" | "ARCHIVED";
+export type ResumeSummary = { id: string; title: string; companyName: string; positionName: string; deadline: string | null; status: ResumeStatus; hasPdf: boolean; submittedAt: string | null; updatedAt: string };
+export type ResumeExperience = { id: string; organization: string; title: string; description: string; startDate: string; endDate: string | null; current: boolean; displayOrder: number };
+export type ResumeProject = { id: string; title: string; summary: string; role: string | null; results: string | null; displayOrder: number };
+export type ResumeSkill = { id: string; name: string; category: string; displayOrder: number };
+export type ResumeDetail = { id: string; title: string; companyName: string; positionName: string; jobPostingUrl: string | null; deadline: string | null; customSummary: string; profileMediaId: string | null; profileMediaUrl: string | null; notes: string | null; status: ResumeStatus; pdfMediaId: string | null; pdfUrl: string | null; submittedAt: string | null; createdAt: string; updatedAt: string; experiences: ResumeExperience[]; projects: ResumeProject[]; skills: ResumeSkill[] };
+export type ResumeRequest = { title: string; companyName: string; positionName: string; jobPostingUrl: string | null; deadline: string | null; customSummary: string; profileMediaId: string | null; notes: string | null; experiences: Array<{ experienceId: string; displayOrder: number; customDescription: string | null }>; projects: Array<{ projectId: string; displayOrder: number; customSummary: string | null }>; skills: Array<{ skillId: string; displayOrder: number }> };

@@ -105,7 +105,7 @@ public class PortfolioService {
 		return experienceResponse(entity);
 	}
 
-	@Transactional public void deleteExperience(UUID id) { requireDelete(experiences, id, "EXPERIENCE_NOT_FOUND"); }
+	@Transactional public void deleteExperience(UUID id) { requireNotUsed("resume_experiences", "experience_id", id, "EXPERIENCE_IN_USE"); requireDelete(experiences, id, "EXPERIENCE_NOT_FOUND"); }
 
 	@Transactional(readOnly = true)
 	public List<EducationResponse> educations() {
@@ -158,6 +158,7 @@ public class PortfolioService {
 		if (!skills.existsById(id)) throw notFound("SKILL_NOT_FOUND", "Skill not found");
 		Integer count = jdbcTemplate.queryForObject("select count(*) from project_skills where skill_id = ?", Integer.class, id);
 		if (count != null && count > 0) throw new ApiException(HttpStatus.CONFLICT, "SKILL_IN_USE", "Skill is used by a project");
+		requireNotUsed("resume_skills", "skill_id", id, "SKILL_IN_USE");
 		skills.deleteById(id);
 	}
 
@@ -210,6 +211,11 @@ public class PortfolioService {
 			UUID id, String code) {
 		if (!repository.existsById(id)) throw notFound(code, "Content not found");
 		repository.deleteById(id);
+	}
+
+	private void requireNotUsed(String table, String column, UUID id, String code) {
+		Integer count = jdbcTemplate.queryForObject("select count(*) from " + table + " where " + column + " = ?", Integer.class, id);
+		if (count != null && count > 0) throw new ApiException(HttpStatus.CONFLICT, code, "Content is used by a resume");
 	}
 
 	private ApiException notFound(String code, String message) { return new ApiException(HttpStatus.NOT_FOUND, code, message); }

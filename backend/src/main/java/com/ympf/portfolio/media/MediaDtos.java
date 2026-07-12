@@ -17,8 +17,8 @@ public final class MediaDtos {
 	private MediaDtos() {}
 	public record MediaMetadataRequest(@NotBlank @Size(max = 300) @SafeText String altText,
 			@Size(max = 1000) @SafeText String caption) {}
-	public record AdminMediaResponse(UUID id, String originalName, String mimeType, long fileSize, int width,
-			int height, String altText, String caption, String url, long usageCount, Instant createdAt, Instant updatedAt) {}
+	public record AdminMediaResponse(UUID id, String originalName, String mimeType, long fileSize, Integer width,
+			Integer height, String altText, String caption, String url, long usageCount, Instant createdAt, Instant updatedAt) {}
 	public record ProjectMediaRequest(@NotNull UUID mediaId, @NotNull MediaRole mediaRole,
 			@Min(0) @Max(10000) int displayOrder) {}
 	public record ProjectMediaOrderItem(@NotNull UUID projectMediaId, @Min(0) @Max(10000) int displayOrder) {}

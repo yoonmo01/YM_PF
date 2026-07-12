@@ -18,6 +18,7 @@ import javax.imageio.ImageIO;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,10 +42,12 @@ public class MediaService {
 	private final MediaFileRepository mediaFiles; private final ProjectMediaRepository projectMedia;
 	private final ProjectRepository projects; private final MediaStorage storage; private final MediaProperties properties;
 	private final Clock clock;
+	private final JdbcTemplate jdbcTemplate;
 	public MediaService(MediaFileRepository mediaFiles, ProjectMediaRepository projectMedia, ProjectRepository projects,
-			MediaStorage storage, MediaProperties properties, Clock clock) {
+			MediaStorage storage, MediaProperties properties, Clock clock, JdbcTemplate jdbcTemplate) {
 		this.mediaFiles = mediaFiles; this.projectMedia = projectMedia; this.projects = projects;
 		this.storage = storage; this.properties = properties; this.clock = clock;
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	@Transactional(readOnly = true)
@@ -92,8 +95,18 @@ public class MediaService {
 	}
 
 	@Transactional
+	public MediaFile storeGeneratedPdf(String originalName, byte[] bytes, String altText) {
+		if (bytes.length < 1 || bytes.length > properties.maxFileSize()) throw badFile("MEDIA_FILE_TOO_LARGE", "Generated PDF exceeds the configured size limit");
+		LocalDate today = LocalDate.ofInstant(clock.instant(), ZoneOffset.UTC);
+		String key = "documents/%04d/%02d/%s.pdf".formatted(today.getYear(), today.getMonthValue(), UUID.randomUUID());
+		try { storage.store(key, bytes, "application/pdf"); } catch (IOException exception) { throw storageError(exception); }
+		try { return mediaFiles.save(new MediaFile(originalName, key, "application/pdf", bytes.length, null, null, altText, null, clock.instant())); }
+		catch (RuntimeException exception) { try { storage.delete(key); } catch (IOException ignored) { /* best-effort rollback cleanup */ } throw exception; }
+	}
+
+	@Transactional
 	public void delete(UUID id) {
-		MediaFile media = requireMedia(id); if (projectMedia.countByMedia_Id(id) > 0) throw new ApiException(HttpStatus.CONFLICT, "MEDIA_IN_USE", "Media is attached and must be detached first");
+		MediaFile media = requireMedia(id); if (usageCount(id) > 0) throw new ApiException(HttpStatus.CONFLICT, "MEDIA_IN_USE", "Media is attached and must be detached first");
 		try { storage.delete(media.getStorageKey()); } catch (IOException exception) { throw storageError(exception); }
 		mediaFiles.delete(media);
 	}
@@ -101,6 +114,8 @@ public class MediaService {
 	@Transactional
 	public AdminProjectMediaResponse attach(UUID projectId, ProjectMediaRequest request) {
 		Project project = requireProject(projectId); MediaFile media = requireMedia(request.mediaId());
+		if (!media.getMimeType().startsWith("image/") || media.getWidth() == null || media.getHeight() == null)
+			throw new ApiException(HttpStatus.BAD_REQUEST, "PROJECT_MEDIA_INVALID", "Only validated images can be attached to projects");
 		if (request.mediaRole() == MediaRole.COVER && projectMedia.existsByProject_IdAndMediaRole(projectId, MediaRole.COVER))
 			throw new ApiException(HttpStatus.CONFLICT, "PROJECT_COVER_EXISTS", "Project already has a cover image");
 		if (projectMedia.findByProject_IdOrderByMediaRoleAscDisplayOrderAsc(projectId).stream().anyMatch(item -> item.getMedia().getId().equals(media.getId())))
@@ -149,11 +164,12 @@ public class MediaService {
 	@Transactional(readOnly = true)
 	public List<PublicMediaResponse> publicMedia(UUID projectId) { return projectMedia.findByProject_IdOrderByMediaRoleAscDisplayOrderAsc(projectId).stream().map(this::publicResponse).toList(); }
 
-	private AdminMediaResponse adminResponse(MediaFile media) { return new AdminMediaResponse(media.getId(), media.getOriginalName(), media.getMimeType(), media.getFileSize(), media.getWidth(), media.getHeight(), media.getAltText(), media.getCaption(), adminUrl(media.getId()), projectMedia.countByMedia_Id(media.getId()), media.getCreatedAt(), media.getUpdatedAt()); }
+	private AdminMediaResponse adminResponse(MediaFile media) { return new AdminMediaResponse(media.getId(), media.getOriginalName(), media.getMimeType(), media.getFileSize(), media.getWidth(), media.getHeight(), media.getAltText(), media.getCaption(), adminUrl(media.getId()), usageCount(media.getId()), media.getCreatedAt(), media.getUpdatedAt()); }
 	private AdminProjectMediaResponse projectResponse(ProjectMedia item) { MediaFile media = item.getMedia(); return new AdminProjectMediaResponse(item.getId(), media.getId(), media.getOriginalName(), item.getMediaRole(), item.getDisplayOrder(), media.getAltText(), media.getCaption(), media.getWidth(), media.getHeight(), adminUrl(media.getId())); }
 	private PublicMediaResponse publicResponse(ProjectMedia item) { MediaFile media = item.getMedia(); return new PublicMediaResponse(item.getMediaRole().name(), item.getDisplayOrder(), media.getAltText(), media.getCaption(), media.getWidth(), media.getHeight(), publicUrl(media.getId())); }
 	private String adminUrl(UUID id) { return "/api/admin/media/" + id + "/content"; }
 	private String publicUrl(UUID id) { return "/api/public/media/" + id + "/content"; }
+	private long usageCount(UUID id) { Long resumeCount = jdbcTemplate.queryForObject("select count(*) from resumes where profile_media_id = ? or pdf_media_id = ?", Long.class, id, id); return projectMedia.countByMedia_Id(id) + (resumeCount == null ? 0 : resumeCount); }
 	private MediaFile requireMedia(UUID id) { return mediaFiles.findById(id).orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "MEDIA_NOT_FOUND", "Media not found")); }
 	private Project requireProject(UUID id) { return projects.findById(id).orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "PROJECT_NOT_FOUND", "Project not found")); }
 	private String safeOriginalName(String name) { if (name == null || name.isBlank()) throw badFile("MEDIA_NAME_INVALID", "File name is required"); String normalized = name.replace('\\', '/'); String result = normalized.substring(normalized.lastIndexOf('/') + 1).strip(); if (result.isBlank() || result.length() > 255) throw badFile("MEDIA_NAME_INVALID", "File name is invalid"); return result; }

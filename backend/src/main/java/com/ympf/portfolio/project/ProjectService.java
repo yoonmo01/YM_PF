@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -44,15 +45,18 @@ public class ProjectService {
 	private final ProjectProblemSolutionRepository problemSolutions;
 	private final SkillRepository skills;
 	private final MediaService mediaService;
+	private final JdbcTemplate jdbcTemplate;
 	private final Clock clock;
 
 	public ProjectService(ProjectRepository projects, ProjectSkillRepository projectSkills,
-			ProjectProblemSolutionRepository problemSolutions, SkillRepository skills, MediaService mediaService, Clock clock) {
+			ProjectProblemSolutionRepository problemSolutions, SkillRepository skills, MediaService mediaService,
+			JdbcTemplate jdbcTemplate, Clock clock) {
 		this.projects = projects;
 		this.projectSkills = projectSkills;
 		this.problemSolutions = problemSolutions;
 		this.skills = skills;
 		this.mediaService = mediaService;
+		this.jdbcTemplate = jdbcTemplate;
 		this.clock = clock;
 	}
 
@@ -132,6 +136,8 @@ public class ProjectService {
 	@Transactional
 	public void delete(UUID id) {
 		if (!projects.existsById(id)) throw notFound();
+		Integer usage = jdbcTemplate.queryForObject("select count(*) from resume_projects where project_id = ?", Integer.class, id);
+		if (usage != null && usage > 0) throw new ApiException(HttpStatus.CONFLICT, "PROJECT_IN_USE", "Project is used by a resume");
 		projects.deleteById(id);
 	}
 

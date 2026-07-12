@@ -59,6 +59,8 @@ app:
     max-file-size: ${MEDIA_MAX_FILE_SIZE:5242880}
     max-width: ${MEDIA_MAX_WIDTH:8000}
     max-height: ${MEDIA_MAX_HEIGHT:8000}
+  resume-pdf:
+    font-path: ${RESUME_PDF_FONT_PATH:}
 
 spring.servlet.multipart:
   max-file-size: 5MB

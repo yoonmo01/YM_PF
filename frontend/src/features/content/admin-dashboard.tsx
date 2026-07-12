@@ -4,10 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import { contentApi } from "./api";
 import { AdminPage } from "./admin-page";
 import { ErrorState, LoadingState } from "./query-state";
+import Link from "next/link";
 
 export function AdminDashboard() {
   const query = useQuery({ queryKey: ["admin", "dashboard"], queryFn: contentApi.dashboard });
-  return <AdminPage eyebrow="Dashboard" title="콘텐츠 현황" description="공개 상태와 최근 변경 사항을 한눈에 확인합니다.">
+  return <AdminPage eyebrow="Dashboard" title="콘텐츠 현황" description="공개 상태와 최근 변경 사항을 한눈에 확인합니다." actions={<div className="flex flex-wrap gap-2"><Link className="rounded-lg border border-line bg-surface px-4 py-2 text-sm font-semibold" href="/admin/projects/new">프로젝트 추가</Link><Link className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white" href="/admin/resumes/new">이력서 추가</Link><Link className="rounded-lg border border-line bg-surface px-4 py-2 text-sm font-semibold" href="/" target="_blank">공개 사이트</Link></div>}>
     {query.isPending && <LoadingState />}{query.isError && <ErrorState retry={() => query.refetch()} />}
     {query.data && <><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{[
       ["공개 프로젝트", query.data.publishedProjectCount], ["초안 프로젝트", query.data.draftProjectCount], ["미디어", query.data.mediaFileCount], ["이력서", query.data.resumeCount],

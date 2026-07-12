@@ -12,6 +12,9 @@ import type {
   Skill,
   AdminMedia,
   AdminProjectMedia,
+  ResumeDetail,
+  ResumeRequest,
+  ResumeSummary,
 } from "./types";
 
 const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").replace(/\/$/, "");
@@ -45,6 +48,13 @@ export const contentApi = {
   attachMedia: (projectId: string, body: { mediaId: string; mediaRole: string; displayOrder: number }) => apiJson<AdminProjectMedia>(`/api/admin/projects/${projectId}/media`, json("POST", body)),
   reorderMedia: (projectId: string, items: Array<{ projectMediaId: string; displayOrder: number }>) => apiJson<AdminProjectMedia[]>(`/api/admin/projects/${projectId}/media/order`, json("PUT", { items })),
   detachMedia: (projectId: string, id: string) => apiVoid(`/api/admin/projects/${projectId}/media/${id}`, { method: "DELETE" }),
+  resumes: () => apiJson<ResumeSummary[]>("/api/admin/resumes"),
+  resume: (id: string) => apiJson<ResumeDetail>(`/api/admin/resumes/${id}`),
+  saveResume: (id: string | null, body: ResumeRequest) => apiJson<ResumeDetail>(id ? `/api/admin/resumes/${id}` : "/api/admin/resumes", json(id ? "PUT" : "POST", body)),
+  copyResume: (id: string) => apiJson<ResumeDetail>(`/api/admin/resumes/${id}/copy`, { method: "POST" }),
+  resumeState: (id: string, action: "ready" | "submit" | "archive") => apiJson<ResumeDetail>(`/api/admin/resumes/${id}/${action}`, { method: "POST" }),
+  generateResumePdf: (id: string) => apiJson<{ mediaId: string; url: string; filename: string; generatedAt: string }>(`/api/admin/resumes/${id}/pdf`, { method: "POST" }),
+  removeResume: (id: string) => apiVoid(`/api/admin/resumes/${id}`, { method: "DELETE" }),
 };
 
 function json(method: string, body: unknown): RequestInit {

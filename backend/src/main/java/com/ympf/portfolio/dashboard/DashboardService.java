@@ -16,6 +16,7 @@ import com.ympf.portfolio.media.MediaFileRepository;
 import com.ympf.portfolio.profile.ProfileRepository;
 import com.ympf.portfolio.project.ProjectRepository;
 import com.ympf.portfolio.project.ProjectStatus;
+import com.ympf.portfolio.resume.ResumeRepository;
 import com.ympf.portfolio.skill.SkillRepository;
 
 @Service
@@ -28,13 +29,15 @@ public class DashboardService {
 	private final SkillRepository skills;
 	private final CertificateRepository certificates;
 	private final MediaFileRepository mediaFiles;
+	private final ResumeRepository resumes;
 
 	public DashboardService(ProjectRepository projects, ProfileRepository profiles,
 			ExperienceRepository experiences, EducationRepository educations,
-			SkillRepository skills, CertificateRepository certificates, MediaFileRepository mediaFiles) {
+			SkillRepository skills, CertificateRepository certificates, MediaFileRepository mediaFiles, ResumeRepository resumes) {
 		this.projects = projects; this.profiles = profiles; this.experiences = experiences;
 		this.educations = educations; this.skills = skills; this.certificates = certificates;
 		this.mediaFiles = mediaFiles;
+		this.resumes = resumes;
 	}
 
 	@Transactional(readOnly = true)
@@ -46,8 +49,9 @@ public class DashboardService {
 		educations.findAll().forEach(item -> recent.add(new RecentItem("EDUCATION", item.getId(), item.getProgram(), item.getUpdatedAt())));
 		skills.findAll().forEach(item -> recent.add(new RecentItem("SKILL", item.getId(), item.getName(), item.getUpdatedAt())));
 		certificates.findAll().forEach(item -> recent.add(new RecentItem("CERTIFICATE", item.getId(), item.getName(), item.getUpdatedAt())));
+		resumes.findAll().forEach(item -> recent.add(new RecentItem("RESUME", item.getId(), item.getTitle(), item.getUpdatedAt())));
 		List<RecentItem> top = recent.stream().sorted(Comparator.comparing(RecentItem::updatedAt).reversed()).limit(10).toList();
 		return new DashboardResponse(projects.countByStatus(ProjectStatus.PUBLISHED),
-				projects.countByStatus(ProjectStatus.DRAFT), mediaFiles.count(), 0, top);
+				projects.countByStatus(ProjectStatus.DRAFT), mediaFiles.count(), resumes.count(), top);
 	}
 }
