@@ -23,3 +23,13 @@ There are no built-in credentials. At startup, bootstrap runs only when both `AD
 ## Secrets
 
 Only placeholder values belong in `.env.example`. Real JWT keys, database passwords, administrator credentials, object-storage keys, and deployment URLs belong in the deployment provider's secret store or an ignored local `.env` file.
+
+## Media and resumes
+
+- Uploads are capped before controller handling and are rechecked by byte length, extension, declared MIME, signature, decoder, and dimensions.
+- Storage keys are generated server-side; original names never become filesystem paths or object keys.
+- Public media streaming requires an association with a `PUBLISHED` project. Administrator media, generated PDFs, and resume profile images remain private.
+- Resume endpoints exist only under `/api/admin`. State transitions require a selected-content baseline, and submission requires a generated PDF.
+- Media referenced by projects or resumes and source content referenced by resumes cannot be deleted until detached.
+
+Production must use HTTPS, provider secret stores, least-privilege object-storage credentials, PostgreSQL TLS, and exact CORS origins. Same-site custom domains are preferred over cross-site cookies.

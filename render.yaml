@@ -1,0 +1,44 @@
+services:
+  - type: web
+    name: ym-pf-backend
+    runtime: docker
+    region: singapore
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /actuator/health
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_USERNAME
+        sync: false
+      - key: DATABASE_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: COOKIE_SECURE
+        value: true
+      - key: COOKIE_SAME_SITE
+        value: None
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: MEDIA_STORAGE_PROVIDER
+        value: s3
+      - key: MEDIA_STORAGE_BUCKET
+        sync: false
+      - key: MEDIA_STORAGE_REGION
+        sync: false
+      - key: MEDIA_STORAGE_ENDPOINT
+        sync: false
+      - key: MEDIA_STORAGE_ACCESS_KEY
+        sync: false
+      - key: MEDIA_STORAGE_SECRET_KEY
+        sync: false
+      - key: RESUME_PDF_FONT_PATH
+        value: /usr/share/fonts/truetype/nanum/NanumGothic.ttf

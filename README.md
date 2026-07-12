@@ -10,6 +10,14 @@ The implementation follows [`PROJECT_SPEC.md`](PROJECT_SPEC.md) phase by phase. 
 - Backend: Java 21, Spring Boot, Spring Web, JPA, Security, Bean Validation, Flyway, springdoc, JUnit/Mockito/Testcontainers
 - Data and runtime: PostgreSQL, provider-neutral media storage, Docker Compose, GitHub Actions
 
+## Implemented capabilities
+
+- Public home, profile, experience, education, skills, certificates, published-project list and case-study detail
+- Single-administrator cookie authentication with refresh rotation, CSRF, exact-origin CORS, and default-deny admin APIs
+- Content CRUD with project draft/published/archived states and public DTO isolation
+- Validated PNG/JPEG upload, local or S3-compatible storage, cover/gallery/architecture roles, ordering, and usage-aware deletion
+- Private company-specific resume CRUD, copy, ordered experience/project/skill selections, preview, Korean PDF generation, and lifecycle states
+
 ## Prerequisites
 
 - Node.js 22+
@@ -55,6 +63,7 @@ See [`.env.example`](.env.example) for the complete list. Important groups are:
 - PostgreSQL: `DATABASE_URL`, `DATABASE_USERNAME`, `DATABASE_PASSWORD`
 - Authentication: `JWT_SECRET`, token TTLs, cookie security, and optional first-run `ADMIN_EMAIL` / `ADMIN_PASSWORD`
 - Media: `MEDIA_STORAGE_PROVIDER` plus local-path or S3-compatible object-storage settings
+- Resume PDF: optional `RESUME_PDF_FONT_PATH` pointing to a Korean-capable TrueType font; Windows uses Malgun Gothic automatically and the backend image includes NanumGothic
 - Web origins: `NEXT_PUBLIC_API_BASE_URL`, `ALLOWED_ORIGINS`
 
 Administrator bootstrap runs only when the database has no users and both `ADMIN_EMAIL` and `ADMIN_PASSWORD` are explicitly set. The password must contain at least 12 characters and at most 72 UTF-8 bytes, and is stored with BCrypt cost 12. Remove `ADMIN_PASSWORD` from the runtime environment after the first account is created. Never commit a populated `.env` file.
@@ -103,6 +112,16 @@ docker compose --env-file .env.example up
 
 The GitHub Actions workflow runs matching `frontend-check`, `backend-check`, `docker-check`, and `e2e-check` jobs.
 
+Playwright intercepts API calls with deterministic fixtures, runs desktop Chromium and Pixel 7 profiles, checks core public/admin flows, horizontal overflow, and serious/critical WCAG A/AA violations. Backend integration tests require a running Docker daemon because they start PostgreSQL with Testcontainers.
+
+## Deployment configuration
+
+- `frontend/vercel.json`: Vercel Next.js project configuration; choose `frontend` as the provider Root Directory.
+- `render.yaml`: Render Docker Blueprint for the backend with all credentials marked for manual secret entry.
+- Neon: provide its SSL JDBC URL and role credentials only to the backend.
+
+See [`docs/deployment.md`](docs/deployment.md) for the complete Vercel, Render, Neon, cookie-domain, object-storage, and release checklist. These files do not deploy anything or create credentials.
+
 ## Repository layout
 
 ```text
@@ -122,3 +141,10 @@ docker-compose.yml        Reproducible local stack
 - Uploads must be validated by size, extension, declared MIME type, and file signature; storage keys must be server-generated.
 
 Deployment configuration is committed only as infrastructure metadata. This repository does not provision credentials or deploy to external services automatically.
+
+## Known operational constraints
+
+- Authentication across unrelated frontend/backend domains depends on third-party-cookie browser policy. Same-site custom domains are preferred.
+- The application intentionally supports one administrator and has no public resume sharing in the MVP.
+- Generated PDFs require a Korean-capable `.ttf`; configure `RESUME_PDF_FONT_PATH` if the platform does not use the supplied Docker image.
+- Uploaded project images are limited to genuine PNG/JPEG files and 5MB by default. Generated PDFs are private administrator media.
