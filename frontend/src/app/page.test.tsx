@@ -15,5 +15,6 @@ describe("Home", () => {
     expect(screen.getByRole("heading", { level: 1, name: "문제를 구조화하고, 검증 가능한 제품으로 만듭니다." })).toBeInTheDocument();
     expect(await screen.findByText("공개된 프로젝트가 아직 없습니다.")).toBeInTheDocument();
     expect(screen.getByRole("navigation", { name: "주 메뉴" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "관리자" })).toHaveAttribute("href", "/admin");
   });
 });

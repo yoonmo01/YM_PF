@@ -10,6 +10,7 @@ test("public portfolio is accessible and responsive", async ({ page }) => {
   await expect(page).toHaveTitle(/Portfolio Hub/);
   await expect(page.getByRole("heading", { level: 1, name: "문제를 구조화하고, 검증 가능한 제품으로 만듭니다." })).toBeVisible();
   await expect(page.getByRole("navigation", { name: "주 메뉴" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "관리자" })).toHaveAttribute("href", "/admin");
   await expect(page.getByText("공개된 프로젝트가 아직 없습니다.")).toBeVisible();
   await assertNoHorizontalOverflow(page);
   await assertNoSeriousAccessibilityViolations(page);

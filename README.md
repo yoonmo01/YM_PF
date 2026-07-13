@@ -112,7 +112,7 @@ docker compose --env-file .env.example up
 
 The GitHub Actions workflow runs matching `frontend-check`, `backend-check`, `docker-check`, and `e2e-check` jobs.
 
-Playwright intercepts API calls with deterministic fixtures, runs desktop Chromium and Pixel 7 profiles, checks core public/admin flows, horizontal overflow, and serious/critical WCAG A/AA violations. Backend integration tests require a running Docker daemon because they start PostgreSQL with Testcontainers.
+Playwright intercepts API calls with deterministic fixtures, runs desktop Chromium, Pixel 7, and a 360px mobile viewport, checks core public/admin flows, horizontal overflow, and serious/critical WCAG A/AA violations. Backend integration tests require a running Docker daemon because they start PostgreSQL with Testcontainers.
 
 ## Deployment configuration
 

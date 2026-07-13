@@ -12,10 +12,18 @@ export function PublicShell({ children }: { children: ReactNode }) {
         <Container className="flex min-h-16 items-center justify-between gap-6">
           <Link className="text-sm font-bold tracking-[0.12em]" href="/">YM · PORTFOLIO</Link>
           <nav aria-label="주 메뉴">
-            <ul className="flex gap-4 text-sm font-semibold text-muted sm:gap-7">
+            <ul className="flex items-center gap-3 text-sm font-semibold text-muted sm:gap-7">
               <li><Link className="hover:text-accent-strong" href="/projects">프로젝트</Link></li>
               <li><Link className="hover:text-accent-strong" href="/about">소개</Link></li>
               <li><Link className="hover:text-accent-strong" href="/contact">연락</Link></li>
+              <li>
+                <Link
+                  className="rounded-lg border border-line px-2.5 py-1.5 text-ink hover:border-accent/50 hover:text-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                  href="/admin"
+                >
+                  관리자
+                </Link>
+              </li>
             </ul>
           </nav>
         </Container>

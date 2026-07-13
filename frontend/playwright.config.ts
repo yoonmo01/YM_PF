@@ -1,6 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const port = 3000;
+const port = 3100;
 const localBaseUrl = `http://127.0.0.1:${port}`;
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? localBaseUrl;
 
@@ -27,13 +27,17 @@ export default defineConfig({
       name: "mobile-chromium",
       use: { ...devices["Pixel 7"] },
     },
+    {
+      name: "narrow-mobile-chromium",
+      use: { ...devices["Pixel 7"], viewport: { width: 360, height: 800 } },
+    },
   ],
   webServer: process.env.PLAYWRIGHT_BASE_URL
     ? undefined
     : {
         command: `pnpm dev --hostname 127.0.0.1 --port ${port}`,
         url: localBaseUrl,
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: false,
         timeout: 120_000,
       },
 });
