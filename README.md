@@ -132,6 +132,8 @@ docs/                     Architecture and deployment notes
 docker-compose.yml        Reproducible local stack
 ```
 
+처음 코드를 읽는다면 [`docs/PROJECT_GUIDE.md`](docs/PROJECT_GUIDE.md)의 구조 설명, 요청 흐름, 데이터 모델, 보안 설계, 추천 학습 순서를 따라가세요.
+
 ## Security invariants
 
 - Authentication uses secure HttpOnly cookies; tokens are never stored in browser local storage.
