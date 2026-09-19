@@ -12,9 +12,9 @@ The Spring Boot API is the authorization boundary. Frontend route guards improve
 - Logout revokes the matching refresh session and expires both cookies.
 - Browser storage such as `localStorage` and `sessionStorage` is never used for credentials.
 
-Cookie authentication is protected by Spring Security CSRF. The frontend first requests `GET /api/auth/csrf`, retains the returned value in memory, and sends it in the documented CSRF header for every mutation. Credentialed CORS accepts only the exact origins configured by `ALLOWED_ORIGINS`; wildcard origins are invalid.
+Cookie authentication is protected by Spring Security CSRF. The browser sends `/api/**` to the frontend origin, and the fixed Next.js rewrite proxies those requests to the backend configured by the server-only `API_PROXY_TARGET`. The frontend first requests `GET /api/auth/csrf`, retains the returned value in memory, and sends it in the documented CSRF header for every mutation. Credentialed CORS accepts only the exact origins configured by `ALLOWED_ORIGINS`; wildcard origins are invalid.
 
-For local same-site development, `SameSite=Lax` and `COOKIE_SECURE=false` are supported. Production must use HTTPS and `COOKIE_SECURE=true`. Cross-site hosting additionally requires `SameSite=None`, but a same-site custom-domain arrangement is preferred because browsers can block third-party cookies.
+For local same-origin development, `SameSite=Lax` and `COOKIE_SECURE=false` are supported. Production must use HTTPS and `COOKIE_SECURE=true`. Authentication cookies remain host-only on the frontend origin; the proxy target is never exposed as a browser credential origin. Cross-site hosting additionally requires `SameSite=None`, but the same-origin proxy arrangement is preferred because browsers can block third-party cookies.
 
 ## First administrator
 

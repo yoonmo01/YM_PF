@@ -1,7 +1,6 @@
 import type { ApiFieldError, AuthUser } from "./types";
 
 const DEFAULT_CSRF_HEADER = "X-XSRF-TOKEN";
-const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").replace(/\/$/, "");
 
 type CsrfDetails = {
   token: string;
@@ -48,7 +47,7 @@ export class ApiError extends Error {
 }
 
 function apiUrl(path: string) {
-  return `${API_BASE_URL}${path}`;
+  return path;
 }
 
 function isMutation(method: string | undefined) {
@@ -132,8 +131,22 @@ async function requestOnce(path: string, options: RequestOptions = {}) {
   return fetchWithCookies(path, { ...init, headers });
 }
 
+async function requestWithCsrfRecovery(path: string, options: RequestOptions = {}) {
+  let response = await requestOnce(path, options);
+
+  if (isMutation(options.method) && response.status === 403) {
+    const error = await toApiError(response.clone());
+    if (error.code === "CSRF_INVALID") {
+      clearCsrfDetails();
+      response = await requestOnce(path, options);
+    }
+  }
+
+  return response;
+}
+
 async function refreshSession() {
-  const response = await requestOnce("/api/auth/refresh", {
+  const response = await requestWithCsrfRecovery("/api/auth/refresh", {
     method: "POST",
     refreshOnUnauthorized: false,
   });
@@ -155,7 +168,7 @@ async function refreshSessionSingleFlight() {
 
 async function request(path: string, options: RequestOptions = {}) {
   const { refreshOnUnauthorized = true } = options;
-  let response = await requestOnce(path, options);
+  let response = await requestWithCsrfRecovery(path, options);
 
   if (response.status !== 401 || !refreshOnUnauthorized) {
     return response;
@@ -167,7 +180,7 @@ async function request(path: string, options: RequestOptions = {}) {
     throw await toApiError(response);
   }
 
-  response = await requestOnce(path, {
+  response = await requestWithCsrfRecovery(path, {
     ...options,
     refreshOnUnauthorized: false,
   });

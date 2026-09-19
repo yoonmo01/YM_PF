@@ -11,6 +11,7 @@ export function useCurrentUser() {
     queryKey: authQueryKey,
     queryFn: getCurrentUser,
     retry: false,
+    refetchOnMount: "always",
     staleTime: 30_000,
   });
 }

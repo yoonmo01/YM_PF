@@ -2,6 +2,23 @@ describe("auth API client", () => {
   beforeEach(() => {
     vi.resetModules();
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
+  });
+
+  it("keeps browser API requests on the frontend origin", async () => {
+    vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "http://localhost:8080");
+    const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify({ id: "user-1", email: "admin@example.com", role: "ADMIN" }),
+        { status: 200, headers: { "Content-Type": "application/json" } },
+      ),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+    const { getCurrentUser } = await import("./api");
+
+    await getCurrentUser();
+
+    expect(fetchMock.mock.calls[0]?.[0]).toBe("/api/auth/me");
   });
 
   it("uses credentialed cookies and an in-memory CSRF token without browser storage", async () => {
@@ -116,6 +133,58 @@ describe("auth API client", () => {
     );
     expect(meCalls).toBe(2);
     expect(refreshCalls).toBe(1);
+  });
+
+  it("refreshes the CSRF token and retries a mutation once after CSRF_INVALID", async () => {
+    let csrfCalls = 0;
+    let profileCalls = 0;
+    const fetchMock = vi.fn<typeof fetch>(async (input, init) => {
+      const url = String(input);
+
+      if (url.endsWith("/api/auth/csrf")) {
+        csrfCalls += 1;
+        return new Response(
+          JSON.stringify({
+            token: csrfCalls === 1 ? "stale-csrf" : "fresh-csrf",
+            headerName: "X-XSRF-TOKEN",
+          }),
+          { status: 200, headers: { "Content-Type": "application/json" } },
+        );
+      }
+
+      if (url.endsWith("/api/admin/profile") && init?.method === "PUT") {
+        profileCalls += 1;
+        const csrfHeader = new Headers(init.headers).get("X-XSRF-TOKEN");
+
+        if (profileCalls === 1) {
+          expect(csrfHeader).toBe("stale-csrf");
+          return new Response(
+            JSON.stringify({ code: "CSRF_INVALID", message: "Invalid CSRF token" }),
+            { status: 403, headers: { "Content-Type": "application/json" } },
+          );
+        }
+
+        expect(csrfHeader).toBe("fresh-csrf");
+        return new Response(JSON.stringify({ name: "Updated profile" }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+
+      throw new Error(`Unexpected request: ${url}`);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    const { apiJson } = await import("./api");
+
+    const profile = await apiJson<{ name: string }>("/api/admin/profile", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: "Updated profile" }),
+    });
+
+    expect(profile).toEqual({ name: "Updated profile" });
+    expect(csrfCalls).toBe(2);
+    expect(profileCalls).toBe(2);
   });
 
   it("sends logout with cookies and CSRF protection", async () => {

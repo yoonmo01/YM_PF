@@ -17,8 +17,7 @@ import type {
   ResumeSummary,
 } from "./types";
 
-const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").replace(/\/$/, "");
-export function mediaUrl(path: string) { return `${API_BASE_URL}${path}`; }
+export function mediaUrl(path: string) { return path; }
 
 export const contentApi = {
   publicProfile: () => apiJson<Profile | null>("/api/public/profile", { refreshOnUnauthorized: false }),

@@ -6,7 +6,7 @@ This repository contains deployable metadata only. Applying it requires separate
 
 1. Create a Vercel project with `frontend` as the Root Directory.
 2. Keep the detected Next.js settings; `frontend/vercel.json` pins the install and build commands.
-3. Set `NEXT_PUBLIC_API_BASE_URL` to the HTTPS backend origin before building.
+3. Set the server-only `API_PROXY_TARGET` to the HTTPS backend origin before building. Browser requests stay on the frontend origin under `/api/**`; Next.js rewrites them to this fixed target.
 4. Add the Vercel origin to backend `ALLOWED_ORIGINS` exactly, without a trailing slash.
 
 ## Backend on Render
@@ -29,7 +29,9 @@ Use the pooled Neon hostname for normal application traffic unless a migration-s
 
 ## Cookies and domains
 
-Separate Vercel and Render domains require `COOKIE_SECURE=true` and `COOKIE_SAME_SITE=None`. Browser third-party-cookie policies can still block authentication, so production should prefer same-site custom domains such as `www.example.com` and `api.example.com`; then `SameSite=Lax` can be evaluated. Always test login, refresh, logout, CSRF, and CORS on the final domains.
+The browser uses the Vercel origin for both pages and `/api/**`; the rewrite forwards API traffic to Render. Set `COOKIE_SECURE=true` in production and keep authentication cookies host-only. This avoids third-party-cookie dependence even when Vercel and Render use unrelated provider domains. Keep the rewrite target fixed in server configuration, do not add business logic to the proxy, and test login, refresh, logout, CSRF, media upload, and CORS on every preview and production domain.
+
+The extra proxy hop adds latency and makes Vercel part of the API availability path. Authenticated API responses must remain non-cacheable. If media uploads outgrow platform proxy limits, move uploads to short-lived signed object-storage URLs rather than weakening cookie or CSRF protection.
 
 ## Object storage
 

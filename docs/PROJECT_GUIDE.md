@@ -2,7 +2,7 @@
 
 이 문서는 YM_PF 코드를 처음 읽는 사람이 프로젝트의 목적, 전체 구조, 핵심 기술, 요청 흐름, 데이터 모델, 보안 설계, 테스트 전략을 이해하고 실제 코드를 단계적으로 공부할 수 있도록 만든 안내서입니다.
 
-기능 요구사항의 원문은 [`PROJECT_SPEC.md`](../PROJECT_SPEC.md), 실행과 환경 설정은 [`README.md`](../README.md), 운영 보안 원칙은 [`security.md`](security.md), 배포 준비는 [`deployment.md`](deployment.md)를 함께 참고합니다.
+기능 요구사항의 원문은 [`PROJECT_SPEC.md`](../PROJECT_SPEC.md), 로컬 실행과 환경 설정은 [`LOCAL_RUN.md`](LOCAL_RUN.md), 전체 프로젝트 소개는 [`README.md`](../README.md), 운영 보안 원칙은 [`security.md`](security.md), 배포 준비는 [`deployment.md`](deployment.md)를 함께 참고합니다.
 
 ## 1. 현재 완성 상태
 
@@ -567,7 +567,7 @@ GitHub Actions job:
 | CORS | `ALLOWED_ORIGINS` |
 | Media | `MEDIA_STORAGE_PROVIDER`, `MEDIA_STORAGE_*` |
 | PDF | `RESUME_PDF_FONT_PATH` |
-| Frontend | `NEXT_PUBLIC_API_BASE_URL` |
+| Frontend | server-only `API_PROXY_TARGET` for the same-origin `/api` rewrite |
 
 로컬 `.env`는 Git에 커밋하지 않습니다. 브라우저에 공개되는 변수는 `NEXT_PUBLIC_` 접두사가 있는 값뿐이어야 합니다.
 

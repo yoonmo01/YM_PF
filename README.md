@@ -27,6 +27,8 @@ The implementation follows [`PROJECT_SPEC.md`](PROJECT_SPEC.md) phase by phase. 
 
 ## Local setup
 
+Windows에서 Docker Desktop으로 실행하는 전체 절차와 문제 해결 방법은 [`docs/LOCAL_RUN.md`](docs/LOCAL_RUN.md)를 참고하세요.
+
 1. Create local environment settings. The example contains development placeholders only; replace every `CHANGE_ME` value.
 
    ```powershell
@@ -64,7 +66,7 @@ See [`.env.example`](.env.example) for the complete list. Important groups are:
 - Authentication: `JWT_SECRET`, token TTLs, cookie security, and optional first-run `ADMIN_EMAIL` / `ADMIN_PASSWORD`
 - Media: `MEDIA_STORAGE_PROVIDER` plus local-path or S3-compatible object-storage settings
 - Resume PDF: optional `RESUME_PDF_FONT_PATH` pointing to a Korean-capable TrueType font; Windows uses Malgun Gothic automatically and the backend image includes NanumGothic
-- Web origins: `NEXT_PUBLIC_API_BASE_URL`, `ALLOWED_ORIGINS`
+- Web routing: server-only `API_PROXY_TARGET` for the Next.js `/api` proxy, plus backend `ALLOWED_ORIGINS`
 
 Administrator bootstrap runs only when the database has no users and both `ADMIN_EMAIL` and `ADMIN_PASSWORD` are explicitly set. The password must contain at least 12 characters and at most 72 UTF-8 bytes, and is stored with BCrypt cost 12. Remove `ADMIN_PASSWORD` from the runtime environment after the first account is created. Never commit a populated `.env` file.
 

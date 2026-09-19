@@ -253,3 +253,6 @@ backend/media/
 .vscode/
 .DS_Store
 Thumbs.db
+/graphify-out
+/.agent
+/.serena
