@@ -16,14 +16,6 @@ export function PublicShell({ children }: { children: ReactNode }) {
               <li><Link className="hover:text-accent-strong" href="/projects">프로젝트</Link></li>
               <li><Link className="hover:text-accent-strong" href="/about">소개</Link></li>
               <li><Link className="hover:text-accent-strong" href="/contact">연락</Link></li>
-              <li>
-                <Link
-                  className="rounded-lg border border-line px-2.5 py-1.5 text-ink hover:border-accent/50 hover:text-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-                  href="/admin"
-                >
-                  관리자
-                </Link>
-              </li>
             </ul>
           </nav>
         </Container>

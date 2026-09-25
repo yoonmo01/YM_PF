@@ -1,11 +1,11 @@
 import type { NextConfig } from "next";
 
-const apiProxyTarget = (process.env.API_PROXY_TARGET ?? "http://localhost:8080").replace(/\/$/, "");
-
 const nextConfig: NextConfig = {
   output: "standalone",
   reactStrictMode: true,
   async rewrites() {
+    if (process.env.NODE_ENV !== "development") return [];
+    const apiProxyTarget = (process.env.API_PROXY_TARGET ?? "http://localhost:8080").replace(/\/$/, "");
     return [{
       source: "/api/:path*",
       destination: `${apiProxyTarget}/api/:path*`,
