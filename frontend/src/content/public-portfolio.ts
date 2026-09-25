@@ -39,6 +39,7 @@ export const portfolio = {
       summary: "범죄 절차와 피해자 상태 변화를 함께 추적하는 보이스피싱 시뮬레이션 연구 시스템",
       featured: true,
       skills: ["FastAPI", "MCP", "ReAct", "HMM", "PostgreSQL"],
+      role: "Multi-Agent 시뮬레이션 연구·개발 및 논문 작성 참여",
       caseStudy: {
         problem: "대화 전체의 현실성만으로는 각 대화 단계의 전략과 피해자 상태 변화가 어떻게 이어지는지 살펴보기 어려웠습니다.",
         goal: "절차에 따른 대화 생성과 단계별 상태 분석을 함께 기록해 연구자가 결과를 검토할 수 있도록 합니다.",
@@ -54,6 +55,7 @@ export const portfolio = {
       summary: "문서를 추출하고 문맥을 보강해 번역한 뒤 원문과 대조하는 연구용 시스템",
       featured: true,
       skills: ["FastAPI", "PostgreSQL", "MinerU", "Gemma4", "TranslateGemma", "Docker"],
+      role: "백엔드·데이터 파이프라인, 모델 연동 및 배포",
       caseStudy: {
         problem: "PDF 추출 과정에서 생긴 오류와 블록 단위 번역의 문맥 단절, 공용 GPU 작업의 경합을 다뤄야 했습니다.",
         goal: "문서 추출부터 번역 결과 검수와 실패 작업 재시도까지 이어지는 흐름을 제공합니다.",
@@ -66,9 +68,12 @@ export const portfolio = {
     {
       slug: "public-audit-ai-viewer",
       title: "공공 감사 데이터 AI 분류·조회 시스템",
-      summary: "공개 감사 문서의 AI 분류 결과를 검색과 통계로 살펴보는 업무 지원 시스템",
+      summary: "공개 감사 결과 약 1만 5천 건을 AI로 분류하고 검색과 통계로 살펴보는 업무 지원 시스템",
       featured: true,
       skills: ["FastAPI", "PostgreSQL", "GPT-4.1-mini", "AWS S3", "React"],
+      role: "백엔드·수집 및 분류 파이프라인·배포",
+      period: "2025.07–2026.01",
+      teamSize: 3,
       caseStudy: {
         problem: "문서 분류 결과와 검수자의 판단을 구분해 보존하지 않으면 분류 기준을 검토하고 개선하기 어렵습니다.",
         goal: "문서 수집과 계층 분류, 검색·통계, 원문 열람을 연결하고 AI 결과와 검수 정보를 비교할 수 있게 합니다.",
@@ -84,6 +89,9 @@ export const portfolio = {
       summary: "직원 동의와 소명 절차를 포함한 Multi-Agent 기반 내부정보 보안 자가점검 앱",
       featured: true,
       skills: ["LangGraph", "FastAPI", "PostgreSQL", "Qdrant", "Neo4j", "Electron"],
+      role: "팀 대표·아키텍처·Multi-Agent 분석·ETL",
+      period: "2026.03–2026.06",
+      teamSize: 3,
       caseStudy: {
         problem: "다양한 파일을 분석하는 기능과 함께 직원 동의, 근거 확인, 잘못된 판단에 대한 소명 절차가 필요했습니다.",
         goal: "분석 과정과 근거를 살펴보고 소명 및 관리자 검토로 이어지는 흐름을 제공합니다.",
@@ -99,6 +107,7 @@ export const portfolio = {
       summary: "피해자 특성을 반영한 합성 대화를 만들고 사람이 그 현실성을 평가한 연구 시스템",
       featured: false,
       skills: ["FastAPI", "MCP", "ReAct", "PostgreSQL", "React"],
+      role: "시뮬레이션 연구·개발 및 논문 작성 참여",
       caseStudy: {
         problem: "실제 통화 자료를 활용하기 어려워 위험 노출 없이 대화 상호작용을 연구할 수 있는 데이터가 필요했습니다.",
         goal: "피해자 특성에 따른 합성 대화 생성과 사람의 현실성 평가를 연결합니다.",
@@ -114,6 +123,9 @@ export const portfolio = {
       summary: "조건에 맞는 정책을 찾고 공고 원문과 대조하는 웹서비스",
       featured: false,
       skills: ["FastAPI", "PostgreSQL", "Playwright", "Gemini", "React"],
+      role: "팀장·정책 검증 파이프라인·백엔드 연계",
+      period: "2025.09–2025.12",
+      teamSize: 4,
       caseStudy: {
         problem: "여러 기관의 정책 공고는 변경되거나 종료될 수 있어 검색 결과만으로 신청 가능 여부를 확인하기 어려웠습니다.",
         goal: "사용자 조건 검색 결과에서 공고 원문과 검증 상태를 확인할 수 있도록 합니다.",
