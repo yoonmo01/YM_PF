@@ -22,27 +22,35 @@ export default async function ProjectDetailPage({ params }: Props) {
   const project: PortfolioProject | undefined = portfolio.projects.find((item) => item.slug === slug);
   if (!project) notFound();
 
-  return <PublicShell><Container className="py-16"><article>
-    <ul className="flex flex-wrap gap-2">{project.skills.map((skill) => <li className="rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent-strong" key={skill}>{skill}</li>)}</ul>
-    <h1 className="mt-5 text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">{project.title}</h1>
-    <p className="mt-6 max-w-3xl text-lg leading-8 text-muted">{project.summary}</p>
-    {(project.role || project.period || project.teamSize) && <dl className="mt-8 grid gap-4 rounded-2xl border border-line bg-surface p-6 text-sm sm:grid-cols-3">
+  return <PublicShell><Container className="py-12 sm:py-16"><article className="max-w-[48rem]">
+    <ul className="flex flex-wrap gap-x-4 gap-y-2 text-sm font-medium text-accent-strong">{project.skills.map((skill) => <li key={skill}>{skill}</li>)}</ul>
+    <h1 className="mt-5 text-4xl font-semibold leading-tight tracking-[-0.04em] sm:text-5xl">{project.title}</h1>
+    <p className="mt-5 text-lg leading-8 text-muted">{project.summary}</p>
+    <section className="mt-10 border-l-2 border-accent pl-5 sm:pl-7"><h2 className="text-sm font-semibold text-accent-strong">문제 정의</h2><p className="mt-3 whitespace-pre-wrap text-base leading-8">{project.caseStudy.problem}</p></section>
+    {(project.role || project.period || project.teamSize) && <dl className="mt-9 grid gap-4 border-y border-line py-5 text-sm sm:grid-cols-3">
       {project.role && <Meta label="역할" value={project.role} />}{project.period && <Meta label="기간" value={project.period} />}{project.teamSize && <Meta label="인원" value={`${project.teamSize}명`} />}
     </dl>}
     <CaseStudy project={project} />
-    {project.links && (project.links.github || project.links.demo) && <section className="mt-14"><h2 className="text-2xl font-semibold">관련 링크</h2><div className="mt-5 flex flex-wrap gap-3">{project.links.github && <a className="rounded-lg border border-line bg-surface px-4 py-2 text-sm font-semibold" href={project.links.github} rel="noreferrer" target="_blank">GitHub</a>}{project.links.demo && <a className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white" href={project.links.demo} rel="noreferrer" target="_blank">Demo</a>}</div></section>}
+    {project.links && (project.links.github || project.links.demo) && <section className="mt-12 border-t border-line pt-7"><h2 className="text-lg font-semibold">관련 링크</h2><div className="mt-4 flex flex-wrap gap-x-6 gap-y-3">{project.links.github && <a className="min-h-11 rounded-sm py-3 text-sm font-semibold text-accent-strong underline decoration-line underline-offset-4 hover:decoration-accent" href={project.links.github} rel="noreferrer" target="_blank">GitHub 저장소</a>}{project.links.demo && <a className="min-h-11 rounded-sm py-3 text-sm font-semibold text-accent-strong underline decoration-line underline-offset-4 hover:decoration-accent" href={project.links.demo} rel="noreferrer" target="_blank">Demo</a>}</div></section>}
   </article></Container></PublicShell>;
 }
 
 function CaseStudy({ project }: { project: PortfolioProject }) {
-  const sections = [
-    ["문제 정의", project.caseStudy.problem], ["목표와 요구사항", project.caseStudy.goal],
-    ["핵심 구현", project.caseStudy.implementation], ["한계", project.caseStudy.limitations],
-    ["회고", project.caseStudy.reflection],
-  ];
-  return sections.map(([title, value]) => <section className="mt-14" key={title}><h2 className="text-2xl font-semibold">{title}</h2><p className="mt-4 max-w-3xl whitespace-pre-wrap text-base leading-8 text-muted">{value}</p></section>);
+  return <>
+    <TextSection title="목표와 요구사항" value={project.caseStudy.goal} />
+    {project.personalWork && <TextSection title="담당 업무" value={project.personalWork} />}
+    {project.technicalChoice && <TextSection title="기술 선택" value={project.technicalChoice} />}
+    <TextSection title="핵심 구현" value={project.caseStudy.implementation} />
+    {project.verification && <TextSection title="검증 및 성과" value={project.verification} />}
+    <TextSection title="한계" value={project.caseStudy.limitations} />
+    <TextSection title="회고" value={project.caseStudy.reflection} />
+  </>;
 }
 
 function Meta({ label, value }: { label: string; value: string }) {
   return <div><dt className="font-semibold text-muted">{label}</dt><dd className="mt-1">{value}</dd></div>;
+}
+
+function TextSection({ title, value }: { title: string; value: string }) {
+  return <section className="mt-10"><h2 className="text-xl font-semibold tracking-[-0.02em]">{title}</h2><p className="mt-3 whitespace-pre-wrap text-base leading-8 text-muted">{value}</p></section>;
 }

@@ -5,7 +5,7 @@ type ContainerProps = ComponentPropsWithoutRef<"div">;
 export function Container({ className = "", ...props }: ContainerProps) {
   return (
     <div
-      className={`mx-auto w-full max-w-[1180px] px-5 sm:px-8 ${className}`}
+      className={`mx-auto w-full max-w-[1120px] px-5 sm:px-8 ${className}`}
       {...props}
     />
   );

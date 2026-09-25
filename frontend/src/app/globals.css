@@ -13,15 +13,15 @@
 }
 
 :root {
-  --canvas: #f7f9fc;
+  --canvas: #f4f7f6;
   --surface: #ffffff;
-  --ink: #122033;
-  --muted: #607086;
-  --line: #dfe7f1;
-  --accent: #0f7b8e;
-  --accent-strong: #075f70;
-  --font-sans-stack: Inter, Pretendard, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+  --ink: #173034;
+  --muted: #53696b;
+  --line: #d7e1df;
+  --accent: #087b76;
+  --accent-strong: #075e5a;
+  --font-sans-stack: Pretendard, "Noto Sans KR", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 * {
@@ -50,9 +50,7 @@ html {
 body {
   min-width: 320px;
   margin: 0;
-  background:
-    radial-gradient(circle at 78% 10%, rgb(201 238 243 / 45%), transparent 28rem),
-    var(--canvas);
+  background: var(--canvas);
   color: var(--ink);
   font-family: var(--font-sans-stack);
   text-rendering: optimizeLegibility;
@@ -61,6 +59,11 @@ body {
 @layer base {
   a {
     color: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
   }
 }
 
