@@ -4,10 +4,12 @@ import { expect, test, type Page, type Route } from "@playwright/test";
 test("public portfolio is accessible and responsive", async ({ page }) => {
   await page.goto("/");
   await expect(page).toHaveTitle("양윤모 | AI Agent · Backend Engineer");
-  await expect(page.getByRole("heading", { level: 1, name: "AI Agent의 판단을 검증 가능한 서비스로 연결합니다." })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "양윤모" })).toBeVisible();
   await expect(page.getByRole("navigation", { name: "주 메뉴" })).toBeVisible();
   await expect(page.getByRole("link", { name: "관리자" })).toHaveCount(0);
   await expect(page.getByRole("link", { name: "VishBox v2" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "수상", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "연구 활동·학력" })).toBeVisible();
   await assertNoHorizontalOverflow(page);
   await assertNoSeriousAccessibilityViolations(page);
 
@@ -15,6 +17,24 @@ test("public portfolio is accessible and responsive", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1, name: "프로젝트" })).toBeVisible();
   await expect(page.getByRole("status")).toHaveText("6개 프로젝트");
   await assertNoHorizontalOverflow(page);
+});
+
+test("six studies render with evidence on desktop and 360px mobile", async ({ page }) => {
+  for (const width of [1280, 360]) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    for (const slug of ["vishbox-v2", "legal-translation-review", "public-audit-ai-viewer", "auth-security-audit", "vishbox", "polystep"]) {
+      await page.goto(`/projects/${slug}`);
+      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+      await assertNoHorizontalOverflow(page);
+    }
+    await page.goto("/");
+    await page.keyboard.press("Tab");
+    await expect(page.getByRole("link", { name: "본문으로 건너뛰기" })).toBeFocused();
+    await assertNoHorizontalOverflow(page);
+  }
+  const missing = await page.goto("/projects/no-such-project");
+  expect(missing?.status()).toBe(404);
 });
 
 test("administrator can complete the mocked login flow", async ({ page }) => {

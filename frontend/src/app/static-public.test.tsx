@@ -14,7 +14,7 @@ it("renders the public pages from local content without a public API request", a
   vi.stubGlobal("fetch", fetchMock);
 
   const { unmount } = render(<HomePage />);
-  expect(screen.getByRole("heading", { level: 1, name: /AI Agent의 판단/ })).toBeInTheDocument();
+  expect(screen.getByRole("heading", { level: 1, name: "양윤모" })).toBeInTheDocument();
   expect(screen.getAllByRole("link", { name: /VishBox v2|판결문 번역|공공 감사|AUTH/ })).toHaveLength(4);
   expect(screen.queryByRole("link", { name: "관리자" })).not.toBeInTheDocument();
   unmount();
@@ -30,16 +30,27 @@ it("renders the public pages from local content without a public API request", a
   expect(fetchMock).not.toHaveBeenCalled();
 });
 
-it("omits empty public sections and shows confirmed contact details", () => {
+it("shows research, education, awards, and the verified publication on the about page", () => {
   const { unmount } = render(<AboutPage />);
   expect(screen.getByText(/AI가 내놓은 답을 사용자가/)).toBeInTheDocument();
-  for (const title of ["경력", "학력·교육", "논문", "수상"]) {
-    expect(screen.queryByRole("heading", { name: title })).not.toBeInTheDocument();
-  }
+  expect(screen.getByRole("heading", { name: "연구 활동" })).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: "학력" })).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: "수상" })).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: /VishBox v2: A Multi-Agent System/ })).toHaveAttribute("href", "https://aclanthology.org/2026.acl-industry.145/");
+  expect(screen.queryByRole("img", { name: /양윤모/ })).not.toBeInTheDocument();
   unmount();
 
   render(<ContactPage />);
   expect(screen.getByRole("link", { name: /coolalex127@gmail.com/ })).toHaveAttribute("href", "mailto:coolalex127@gmail.com");
+});
+
+it("shows project evidence previews without invented screenshots", () => {
+  render(<ProjectsPage />);
+  expect(screen.getByRole("img", { name: "VishBox v2의 Multi-Agent 시스템 구조" })).toBeInTheDocument();
+  expect(screen.getByText("PDF 추출 → 문맥 생성 → 번역")).toBeInTheDocument();
+  expect(screen.getByText("약 1만 5천 건")).toBeInTheDocument();
+  expect(screen.getByText("가상환경 모의 시나리오 예상 위험 등급 일치")).toBeInTheDocument();
+  expect(screen.getByRole("img", { name: "POLYSTEP 정책 검색 서비스 첫 화면" })).toBeInTheDocument();
 });
 
 it("pre-renders six detail paths with distinct metadata and returns 404 for unknown slugs", async () => {

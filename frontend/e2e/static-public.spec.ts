@@ -19,7 +19,7 @@ test("static public pages work without API calls at desktop and mobile widths", 
 
   await page.goto("/");
   await expect(page).toHaveTitle("양윤모 | AI Agent · Backend Engineer");
-  await expect(page.getByRole("heading", { level: 1, name: "AI Agent의 판단을 검증 가능한 서비스로 연결합니다." })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "양윤모" })).toBeVisible();
   await expect(page.getByRole("link", { name: "관리자" })).toHaveCount(0);
   await page.keyboard.press("Tab");
   const skipLink = page.getByRole("link", { name: "본문으로 건너뛰기" });
@@ -63,7 +63,9 @@ test("static public pages work without API calls at desktop and mobile widths", 
 
   await page.goto("/about");
   await expect(page.getByRole("heading", { level: 1, name: "양윤모" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "논문" })).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "연구 활동" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "학력" })).toBeVisible();
+  await expect(page.getByRole("link", { name: /VishBox v2: A Multi-Agent System/ })).toHaveAttribute("href", "https://aclanthology.org/2026.acl-industry.145/");
   await assertNoSeriousAccessibilityViolations(page);
   await page.goto("/contact");
   await expect(page.getByRole("link", { name: /coolalex127@gmail.com/ })).toHaveAttribute("href", "mailto:coolalex127@gmail.com");
@@ -75,7 +77,7 @@ test("static public pages work without API calls at desktop and mobile widths", 
 });
 
 test("production admin and API routes are unavailable", async ({ request }) => {
-  test.skip(!process.env.PLAYWRIGHT_BASE_URL, "Run against a production-mode build or Vercel preview");
+  test.skip(process.env.PLAYWRIGHT_PRODUCTION !== "1", "Run against a production-mode build or Vercel preview");
   for (const path of ["/admin", "/admin/login", "/admin/resumes", "/api/admin/projects", "/api/public/projects"]) {
     const response = await request.get(path);
     expect(response.status(), path).toBe(404);

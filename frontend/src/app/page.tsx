@@ -13,25 +13,25 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return <PublicShell>
-    <section className="py-16 sm:py-24"><Container>
-      <div className="grid gap-8 md:grid-cols-[minmax(0,1.25fr)_minmax(18rem,0.75fr)] md:items-end md:gap-14">
-        <div>
-          <p className="text-sm font-semibold text-accent">AI Agent Engineer · Backend Engineer</p>
-          <h1 className="mt-5 max-w-3xl text-4xl font-semibold leading-[1.13] tracking-[-0.045em] text-ink sm:text-6xl">{portfolio.profile.headline}</h1>
-        </div>
-        <p className="border-l-2 border-accent pl-5 text-base leading-8 text-muted sm:text-lg">{portfolio.profile.shortBio}</p>
-      </div>
-      <p className="mt-6 text-sm font-medium text-muted">{portfolio.profile.name}</p>
-      <div className="mt-7 flex flex-wrap gap-3">
-        <Link className="inline-flex min-h-11 items-center rounded-md bg-ink px-5 text-sm font-semibold text-white hover:bg-accent-strong" href="/projects">프로젝트 보기</Link>
-        <Link className="inline-flex min-h-11 items-center rounded-md border border-line bg-surface px-5 text-sm font-semibold hover:border-accent" href="/contact">연락하기</Link>
-        <a className="inline-flex min-h-11 items-center rounded-md border border-line bg-surface px-5 text-sm font-semibold hover:border-accent" href={portfolio.profile.githubUrl} rel="noreferrer" target="_blank">GitHub</a>
-      </div>
+    <section className="py-10 sm:py-14"><Container>
+      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent-strong">AI Agent Engineer · Backend Engineer</p>
+      <h1 className="mt-3 text-4xl font-semibold tracking-[-0.05em] sm:text-6xl">{portfolio.profile.name}</h1>
+      <p className="mt-4 max-w-3xl text-xl font-medium leading-8 tracking-[-0.025em] sm:text-2xl">{portfolio.profile.headline}</p>
+      <p className="mt-3 max-w-2xl text-sm leading-7 text-muted sm:text-base">{portfolio.profile.shortBio}</p>
+      <div className="mt-6 flex flex-wrap gap-3"><Link className="inline-flex min-h-11 items-center rounded-md bg-ink px-5 text-sm font-semibold text-white hover:bg-accent-strong" href="/projects">프로젝트 보기</Link><Link className="inline-flex min-h-11 items-center rounded-md border border-line bg-surface px-5 text-sm font-semibold hover:border-accent" href="/contact">연락하기</Link></div>
     </Container></section>
-    <section className="border-t border-line py-10 sm:py-14" aria-labelledby="featured-title"><Container>
-      <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-sm font-semibold text-accent">대표 프로젝트</p><h2 className="mt-2 text-3xl font-semibold tracking-[-0.035em] sm:text-4xl" id="featured-title">문제를 해결한 과정</h2></div><Link className="rounded-sm text-sm font-semibold underline decoration-line underline-offset-4 hover:decoration-accent" href="/projects">전체 프로젝트 보기</Link></div>
-      <div className="mt-7 divide-y divide-line border-y border-line">{portfolio.projects.filter((project) => project.featured).map((project) => <StaticProjectCard key={project.slug} project={project} />)}</div>
+    <section className="pb-14 sm:pb-20" aria-labelledby="featured-title"><Container>
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-4"><h2 className="text-2xl font-semibold tracking-[-0.035em] sm:text-3xl" id="featured-title">대표 프로젝트</h2><Link className="rounded-sm text-sm font-semibold text-accent-strong underline decoration-line underline-offset-4 hover:decoration-accent" href="/projects">전체 프로젝트 보기</Link></div>
+      <div className="grid gap-5">{portfolio.projects.filter((project) => project.featured).map((project, index) => <StaticProjectCard key={project.slug} project={project} headingLevel={3} spotlight={index === 0} />)}</div>
     </Container></section>
-    {portfolio.skills.length > 0 && <section className="mt-5 border-t border-line py-10 sm:py-14"><Container><h2 className="text-2xl font-semibold">기술</h2><ul className="mt-5 flex flex-wrap gap-x-5 gap-y-3">{portfolio.skills.map((skill) => <li className="text-sm font-medium text-muted" key={skill}>{skill}</li>)}</ul></Container></section>}
+    <section className="border-t border-line py-14 sm:py-20" aria-labelledby="awards-title"><Container>
+      <h2 className="text-2xl font-semibold tracking-[-0.035em] sm:text-3xl" id="awards-title">수상</h2>
+      <div className="mt-6 grid gap-4 md:grid-cols-2">{portfolio.awards.map((award) => <article className="rounded-xl border border-line bg-surface p-6" key={award.title}><p className="text-xs font-semibold tabular-nums text-accent-strong">{award.date}</p><h3 className="mt-3 text-lg font-semibold leading-7">{award.title}</h3><p className="mt-3 text-sm text-muted">{award.issuer}</p></article>)}</div>
+    </Container></section>
+    <section className="border-t border-line py-14 sm:py-20" aria-labelledby="activity-title"><Container>
+      <h2 className="text-2xl font-semibold tracking-[-0.035em] sm:text-3xl" id="activity-title">연구 활동·학력</h2>
+      <div className="mt-6 grid gap-4 md:grid-cols-2"><div className="rounded-xl border border-line bg-surface p-6"><h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-accent-strong">연구 활동</h3>{portfolio.experiences.map((item) => <div className="mt-4" key={item.organization}><p className="text-lg font-semibold">{item.organization}</p><p className="mt-2 text-sm text-muted">{item.title} · {item.period}</p><p className="mt-3 text-sm leading-7 text-muted">{item.description}</p></div>)}</div><div className="rounded-xl border border-line bg-surface p-6"><h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-accent-strong">학력</h3>{portfolio.educations.map((item) => <div className="mt-4" key={item.institution}><p className="text-lg font-semibold">{item.institution}</p><p className="mt-2 text-sm text-muted">{item.program}</p><p className="mt-3 text-sm text-muted">{item.period}</p></div>)}</div></div>
+    </Container></section>
+    <section className="border-t border-line bg-[#e3f1ed] py-14 sm:py-20"><Container><h2 className="text-2xl font-semibold tracking-[-0.035em] sm:text-3xl">함께 이야기해요.</h2><p className="mt-3 text-sm leading-7 text-muted">프로젝트와 협업에 관한 이야기를 기다립니다.</p><a className="mt-5 inline-flex min-h-11 items-center rounded-md bg-ink px-5 text-sm font-semibold text-white hover:bg-accent-strong" href={`mailto:${portfolio.profile.email}`}>{portfolio.profile.email} ↗</a></Container></section>
   </PublicShell>;
 }
