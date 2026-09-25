@@ -1,42 +1,26 @@
-# Deployment guide
+# 배포 안내
 
-This repository contains deployable metadata only. Applying it requires separate provider accounts and manually supplied secrets; no deployment or credential creation is automated.
+## 현재 공개 릴리스
 
-## Frontend on Vercel
+채용용 포트폴리오는 기존 Vercel 프로젝트 `yoonmo-portfolio`에서 제공합니다. 연결 저장소는 `yoonmo01/yoonmo-portfolio`, 운영 브랜치는 `main`, Vercel Root Directory는 `frontend`입니다. 새 Vercel 프로젝트를 만들지 않습니다.
 
-1. Create a Vercel project with `frontend` as the Root Directory.
-2. Keep the detected Next.js settings; `frontend/vercel.json` pins the install and build commands.
-3. Set the server-only `API_PROXY_TARGET` to the HTTPS backend origin before building. Browser requests stay on the frontend origin under `/api/**`; Next.js rewrites them to this fixed target.
-4. Add the Vercel origin to backend `ALLOWED_ORIGINS` exactly, without a trailing slash.
+홈, 소개, 연락, 프로젝트 목록과 여섯 상세 페이지는 `frontend/src/content/public-portfolio.ts`의 검토된 공개 콘텐츠로 빌드됩니다. 문구나 링크를 바꾸려면 코드를 검토하고 다시 배포해야 합니다. 이 릴리스의 공개 화면은 실행 중인 Java API를 호출하지 않습니다. Java 백엔드, PostgreSQL, 객체 스토리지는 운영하지 않으며 해당 자격 증명도 Vercel에 필요하지 않습니다. 관리자·회사별 이력서·PDF 기능은 로컬 개발용 소스로 유지합니다. 운영 `/admin/**`는 404이고, 운영 `/api/**`에는 백엔드 프록시가 없습니다.
 
-## Backend on Render
+이는 **정적 콘텐츠 기반 Next.js 배포**입니다. 저장소에 관리자 라우트 소스가 남아 있으므로 Vercel 빌드 전체에 함수가 전혀 없다고 가정하지 않습니다.
 
-The root `render.yaml` defines a Docker web service and leaves every credential as `sync: false`. Supply the Neon and object-storage values in Render's secret settings before the first deployment. The image includes NanumGothic for Korean resume PDFs and runs as an unprivileged user.
+## 프리뷰와 공개 절차
 
-After the first successful start creates the sole administrator, remove `ADMIN_PASSWORD` from the service environment. Do not rotate or remove `JWT_SECRET` while active refresh sessions must remain valid.
+1. 기능 브랜치의 PR에서 프론트엔드 검사와 Vercel 프리뷰를 확인합니다. Vercel의 연결 저장소와 Root Directory가 위 설정과 일치하는지 확인합니다.
+2. 프리뷰에서 홈·소개·연락·프로젝트 목록·여섯 상세 페이지, 360px 화면, 키보드 이동, 외부 링크와 문구를 검토합니다. 미확인 역할·성과·논문·수상·이미지는 공개하지 않습니다.
+3. `/admin/**`와 `/api/admin/**`가 프리뷰에서 사용 불가능하고 공개 페이지가 `/api/public/**` 없이 열리는지 확인합니다.
+4. 소유자가 공개 문구·개인정보·프리뷰를 승인한 뒤에만 `main`에 병합합니다. 운영 배포가 완료되면 배포 커밋과 모든 공개 경로를 확인합니다. 이전 정상 배포를 롤백 대상으로 유지합니다.
 
-## PostgreSQL on Neon
+운영 주소와 프리뷰 URL은 Vercel 배포 화면에서 확인합니다. 저장소 문서에 배포 URL이나 비밀값을 고정하지 않습니다.
 
-Create a Neon project manually and map its connection details as follows:
+## 향후 풀스택 운영 계획
 
-```text
-DATABASE_URL=jdbc:postgresql://<host>/<database>?sslmode=require
-DATABASE_USERNAME=<role>
-DATABASE_PASSWORD=<password>
-```
+`PROJECT_SPEC.md`의 Spring Boot 관리자·이력서·PDF 기능은 현재 공개 릴리스와 별개입니다. 이를 운영하려면 백엔드 호스팅, PostgreSQL, 미디어용 객체 스토리지, 관리자 인증 및 비공개 데이터의 접근 제어를 별도 검증해야 합니다. `render.yaml`은 Render 후보 설정이고 `.env.example`은 로컬 예시이며, 이 릴리스가 Render·Neon·S3를 사용한다는 뜻은 아닙니다.
 
-Use the pooled Neon hostname for normal application traffic unless a migration-specific direct connection is required. Flyway runs at backend startup. Test migrations against a disposable branch before production changes, retain Neon backups, and never place the connection string in Vercel's public variables.
+향후 Render와 Neon을 선택한다면 백엔드에만 JDBC 연결과 인증·스토리지 비밀값을 설정하고 Flyway 마이그레이션을 검증합니다. PDF에는 한국어 글꼴을 제공해야 합니다. 운영을 열기 전 로그인·쿠키·CSRF·CORS, 미디어 업로드, 비공개 이력서와 PDF 접근, 백업·복구를 함께 검사합니다.
 
-## Cookies and domains
-
-The browser uses the Vercel origin for both pages and `/api/**`; the rewrite forwards API traffic to Render. Set `COOKIE_SECURE=true` in production and keep authentication cookies host-only. This avoids third-party-cookie dependence even when Vercel and Render use unrelated provider domains. Keep the rewrite target fixed in server configuration, do not add business logic to the proxy, and test login, refresh, logout, CSRF, media upload, and CORS on every preview and production domain.
-
-The extra proxy hop adds latency and makes Vercel part of the API availability path. Authenticated API responses must remain non-cacheable. If media uploads outgrow platform proxy limits, move uploads to short-lived signed object-storage URLs rather than weakening cookie or CSRF protection.
-
-## Object storage
-
-Production uses the `s3` provider. Configure bucket, region, optional S3-compatible HTTPS endpoint, access key, and secret key in the backend provider only. Grant only object read/write/delete permissions for the application bucket. The database stores metadata and generated keys, not file bytes.
-
-## Release verification
-
-Before deployment, run all commands in the root README. After deployment, verify `/actuator/health`, `/v3/api-docs`, public project filtering, administrator login, media upload, resume preview/PDF, security response headers, and the absence of draft/resume data from public APIs.
+요청 시에만 실행할 가벼운 기능은 추후 Next.js Route Handler를 Vercel Function으로 추가할 수 있습니다. 영구적인 콘텐츠 편집이나 사용자 데이터 저장에는 외부 데이터 저장소와 권한 관리가 추가로 필요합니다. 이 릴리스에는 그런 API가 없습니다.

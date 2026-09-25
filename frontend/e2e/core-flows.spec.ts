@@ -1,27 +1,24 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page, type Route } from "@playwright/test";
 
-test.beforeEach(async ({ page }) => {
-  await page.route("**/api/**", async (route) => mockApi(route));
-});
-
 test("public portfolio is accessible and responsive", async ({ page }) => {
   await page.goto("/");
-  await expect(page).toHaveTitle(/Portfolio Hub/);
-  await expect(page.getByRole("heading", { level: 1, name: "문제를 구조화하고, 검증 가능한 제품으로 만듭니다." })).toBeVisible();
+  await expect(page).toHaveTitle("양윤모 | AI Agent · Backend Engineer");
+  await expect(page.getByRole("heading", { level: 1, name: "AI Agent의 판단을 검증 가능한 서비스로 연결합니다." })).toBeVisible();
   await expect(page.getByRole("navigation", { name: "주 메뉴" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "관리자" })).toHaveAttribute("href", "/admin");
-  await expect(page.getByText("공개된 프로젝트가 아직 없습니다.")).toBeVisible();
+  await expect(page.getByRole("link", { name: "관리자" })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "VishBox v2" })).toBeVisible();
   await assertNoHorizontalOverflow(page);
   await assertNoSeriousAccessibilityViolations(page);
 
   await page.getByRole("link", { name: "프로젝트", exact: true }).click();
   await expect(page.getByRole("heading", { level: 1, name: "프로젝트" })).toBeVisible();
-  await expect(page.getByText("공개된 프로젝트가 아직 없습니다.")).toBeVisible();
+  await expect(page.getByRole("status")).toHaveText("6개 프로젝트");
   await assertNoHorizontalOverflow(page);
 });
 
 test("administrator can complete the mocked login flow", async ({ page }) => {
+  await page.route("**/api/**", async (route) => mockApi(route));
   await page.goto("/admin/login");
   await page.getByLabel("이메일").fill("admin@example.com");
   await page.getByLabel("비밀번호").fill("correct-horse-battery-staple");
