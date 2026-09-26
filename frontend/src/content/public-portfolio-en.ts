@@ -30,7 +30,7 @@ const projectCopy: Record<string, Pick<PortfolioProject, "title" | "summary" | "
 const previewCopy: Record<string, PortfolioProject["preview"]> = {
   "vishbox-v2": { kind: "image", src: "/projects/VP2/fig1-architecture.png", alt: "VishBox v2 multi-agent system architecture" },
   "legal-translation-review": { kind: "flow", steps: ["MinerU", "Gemma4", "TranslateGemma"], caption: "PDF extraction → context → translation" },
-  "public-audit-ai-viewer": { kind: "image", src: "/projects/AUDIT/audit-viewer.png", alt: "Search filters in the public audit results viewer", caption: "Built around roughly 15,000 public audit records" },
+  "public-audit-ai-viewer": { kind: "image", src: "/projects/AUDIT/audit-home.png", alt: "Home screen of the public audit results viewer", caption: "Service screen reproduced with a separate dataset" },
   "auth-security-audit": { kind: "image", src: "/projects/AUTH/system-flow.svg", alt: "AUTH flow from evidence ingestion to agent analysis and appeals", caption: "3/3 VM scenarios matched · Agent analysis 8 min → 2–3 min (measured)" },
   vishbox: { kind: "image", src: "/projects/VP/fig1-architecture.png", alt: "VishBox v1 multi-agent system architecture" },
   polystep: { kind: "image", src: "/projects/POLYSTEP/fig3-home.png", alt: "POLYSTEP policy search home screen" },

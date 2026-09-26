@@ -79,7 +79,7 @@ export const portfolio = {
       summary: "공개 감사 결과 약 1만 5천 건을 AI로 분류하고 검색과 통계로 살펴보는 업무 지원 시스템",
       featured: false,
       skills: ["FastAPI", "PostgreSQL", "GPT-4.1-mini", "AWS S3", "React"],
-      preview: { kind: "image", src: "/projects/AUDIT/audit-viewer.png", alt: "공공 감사 결과 조회 서비스의 검색 조건 화면", caption: "공개 감사 결과 약 1만 5천 건 구축" },
+      preview: { kind: "image", src: "/projects/AUDIT/audit-home.png", alt: "공공 감사 결과 조회 서비스 첫 화면", caption: "별도 데이터로 재현한 서비스 화면" },
       role: "3단계 분류 프롬프트·FastAPI 조회 서비스·AWS 배포·기관 협의 및 인계",
       period: "2025.07–2026.01",
       teamSize: 3,

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Container } from "@/components/layout/container";
 import { PublicShell } from "@/components/layout/public-shell";
 import { portfolio } from "@/content/public-portfolio";
@@ -9,7 +10,7 @@ export function AboutContent({ locale = "ko" }: { locale?: "ko" | "en" }) {
   const en = locale === "en";
   const data = en ? portfolioEn : portfolio;
   return <PublicShell locale={locale} alternateHref={en ? "/about" : "/en/about"}><Container className="py-12 sm:py-16">
-    <header className="max-w-[48rem]"><p className="text-sm font-semibold text-accent">{en ? "About" : "소개"}</p><h1 className="mt-3 text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">{data.profile.name}</h1><p className="mt-7 whitespace-pre-wrap text-base leading-8 text-muted">{data.profile.longBio}</p></header>
+    <header className="grid gap-8 md:grid-cols-[minmax(0,1fr)_240px] md:items-start"><div><p className="text-sm font-semibold text-accent">{en ? "About" : "소개"}</p><h1 className="mt-3 text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">{data.profile.name}</h1><p className="mt-7 whitespace-pre-wrap text-base leading-8 text-muted">{data.profile.longBio}</p></div><Image src="/about/profile-photo.jpg" alt={en ? "Portrait of Yoonmo Yang" : "양윤모 증명사진"} width={549} height={726} loading="eager" className="mx-auto h-auto w-44 rounded-xl border border-line bg-white sm:w-52 md:mx-0 md:w-60" /></header>
     <div className="mt-12 grid gap-12 border-t border-line pt-10 lg:grid-cols-2">
       <section><h2 className="text-2xl font-semibold">{en ? "Research" : "연구 활동"}</h2>{data.experiences.map((item) => <article className="mt-5" key={item.organization}><h3 className="text-lg font-semibold">{item.organization}</h3><p className="mt-2 text-sm text-accent-strong">{item.title} · {item.period}</p><p className="mt-3 text-sm leading-7 text-muted">{item.description}</p></article>)}</section>
       <section><h2 className="text-2xl font-semibold">{en ? "Education" : "학력"}</h2>{data.educations.map((item) => <article className="mt-5" key={item.institution}><h3 className="text-lg font-semibold">{item.institution}</h3><p className="mt-2 text-sm text-muted">{item.program}</p><p className="mt-3 text-sm text-muted">{item.period}</p></article>)}</section>

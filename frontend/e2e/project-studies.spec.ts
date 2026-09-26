@@ -46,3 +46,28 @@ test("AUTH study renders its Mermaid architecture as a diagram", async ({ page }
     await page.screenshot({ path: testInfo.outputPath("auth-architecture.png") });
   }
 });
+
+test("study prose and tables share the article width", async ({ page }) => {
+  await page.goto("/projects/legal-translation-review");
+  const heading = page.getByRole("heading", { name: /왜 만들었나/ });
+  const table = page.locator("article table").first().locator("..");
+  const headingWidth = await heading.evaluate((node) => node.getBoundingClientRect().width);
+  const tableWidth = await table.evaluate((node) => node.getBoundingClientRect().width);
+  expect(Math.abs(headingWidth - tableWidth)).toBeLessThan(2);
+});
+
+test("audit study shows the local data viewer, map, and chart", async ({ page }) => {
+  await page.goto("/projects/public-audit-ai-viewer");
+  for (const alt of [
+    "공공 감사 결과분석 시스템 첫 화면",
+    "공공 감사 결과 조회 조건 화면",
+    "공공 감사 지역별 지도와 분야별 통계",
+    "공공 감사 분야별 막대 차트",
+  ]) {
+    const image = page.getByRole("img", { name: alt });
+    await expect(image).toBeVisible();
+    await image.scrollIntoViewIfNeeded();
+    await expect.poll(() => image.evaluate((node) => (node as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  }
+  await expect(page.getByText("캡처에 사용한 JSON과 약 1만 5천 건 구축 규모는 집계 범위가 다릅니다.")).toBeVisible();
+});
