@@ -14,15 +14,22 @@ describe("Home", () => {
 
     expect(screen.getByRole("heading", { level: 1, name: "양윤모" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "VishBox v2" })).toHaveAttribute("href", "/projects/vishbox-v2");
+    expect(screen.getByRole("link", { name: "GitHub" })).toHaveAttribute("href", "https://github.com/yoonmo01");
+    expect(screen.getByRole("link", { name: "LinkedIn" })).toHaveAttribute("href", "https://www.linkedin.com/in/yoonmo-yang/");
+    expect(screen.queryByRole("link", { name: "프로젝트 보기" })).not.toBeInTheDocument();
     expect(screen.getByRole("img", { name: "VishBox v2의 Multi-Agent 시스템 구조" })).toBeInTheDocument();
-    const projects = screen.getByRole("heading", { name: "대표 프로젝트" });
-    const awards = screen.getByRole("heading", { name: "수상" });
-    const activity = screen.getByRole("heading", { name: "연구 활동·학력" });
-    expect(projects.compareDocumentPosition(awards) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(awards.compareDocumentPosition(activity) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    const experience = screen.getByRole("heading", { name: "Experience" });
+    const awards = screen.getByRole("heading", { name: "Awards" });
+    const papers = screen.getByRole("heading", { name: "Papers" });
+    const projects = screen.getByRole("heading", { name: "Projects" });
+    const skills = screen.getByRole("heading", { name: "Skills" });
+    for (const [first, next] of [[experience, awards], [awards, papers], [papers, projects], [projects, skills]]) {
+      expect(first.compareDocumentPosition(next) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    }
     expect(screen.getByText("2026년 1학기 SW캡스톤디자인 경진대회 동상")).toBeInTheDocument();
     expect(screen.getByText("한림대학교 지능형 의사결정시스템 연구실")).toBeInTheDocument();
     expect(screen.getByRole("navigation", { name: "주 메뉴" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^KO/ })).toHaveAttribute("href", "/en");
     expect(screen.queryByRole("link", { name: "관리자" })).not.toBeInTheDocument();
     expect(fetchMock).not.toHaveBeenCalled();
   });

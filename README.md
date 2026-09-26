@@ -1,6 +1,6 @@
 # YM_PF · Portfolio Hub
 
-현재 채용용 공개 사이트는 기존 Vercel 프로젝트 `yoonmo-portfolio`에서 **정적 콘텐츠 기반 Next.js 페이지**로 제공할 준비 중입니다. 홈, 소개, 연락, 프로젝트 목록과 여섯 상세 페이지는 [`frontend/src/content/public-portfolio.ts`](frontend/src/content/public-portfolio.ts)의 검토된 데이터에서 빌드됩니다. 문구를 바꾸려면 코드 검토와 재배포가 필요합니다. 이번 공개 릴리스는 Java 백엔드, PostgreSQL, 객체 스토리지를 운영하지 않으며 관리자·회사별 이력서·PDF는 공개하지 않습니다.
+채용용 공개 사이트는 기존 Vercel 프로젝트 `yoonmo-portfolio`에서 **정적 콘텐츠 기반 Next.js 페이지**로 제공합니다. 한국어와 영어의 홈, 소개, 연락, 프로젝트 목록과 각 여섯 상세 페이지는 [`frontend/src/content/public-portfolio.ts`](frontend/src/content/public-portfolio.ts)와 [`frontend/src/content/public-portfolio-en.ts`](frontend/src/content/public-portfolio-en.ts)의 검토된 데이터에서 빌드됩니다. 영어 상세 페이지의 긴 원문 사례·도표는 한국어 자료를 함께 보여줍니다. 문구를 바꾸려면 코드 검토와 재배포가 필요합니다. 이번 공개 릴리스는 Java 백엔드, PostgreSQL, 객체 스토리지를 운영하지 않으며 관리자·회사별 이력서·PDF는 공개하지 않습니다.
 
 저장소에는 향후 풀스택 서비스를 위한 Spring Boot 관리자·이력서 구현이 남아 있습니다. 로컬에서는 개발할 수 있지만 현재 운영 공개 화면은 그 API에 의존하지 않습니다. 전체 제품 요구사항은 [`PROJECT_SPEC.md`](PROJECT_SPEC.md), 이번 릴리스와 미래 배포의 구분은 [`docs/deployment.md`](docs/deployment.md)를 참고하세요.
 
@@ -12,8 +12,8 @@
 
 ## 현재 공개 화면
 
-- 개인 소개, 연락처, 기술과 여섯 프로젝트 사례를 로컬 공개 콘텐츠에서 사전 렌더링
-- 공개 프로젝트는 기술별로 필터링 가능하며 알 수 없는 상세 주소는 404
+- 개인 소개, 연락처, Experience·Awards·Papers·Projects·Skills와 여섯 프로젝트 사례를 로컬 공개 콘텐츠에서 사전 렌더링
+- 한국어·영어 경로에서 같은 프로젝트를 확인할 수 있으며 알 수 없는 상세 주소는 404
 - 운영 `/admin/**`는 404이고 운영 `/api/**` 백엔드 프록시는 없음
 
 ## 로컬 개발용 풀스택 구현

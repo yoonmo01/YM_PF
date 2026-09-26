@@ -26,7 +26,7 @@ export default async function ProjectDetailPage({ params }: Props) {
   if (!project) notFound();
   const study = readFileSync(join(process.cwd(), "src", "content", "project-studies", `${project.slug}.md`), "utf8");
 
-  return <PublicShell><Container className="py-12 sm:py-16"><article>
+  return <PublicShell alternateHref={`/en/projects/${slug}`}><Container className="py-12 sm:py-16"><article>
     <header className="max-w-[48rem]">
     <ul className="flex flex-wrap gap-x-4 gap-y-2 text-sm font-medium text-accent-strong">{project.skills.map((skill) => <li key={skill}>{skill}</li>)}</ul>
     <h1 className="mt-5 text-4xl font-semibold leading-tight tracking-[-0.04em] sm:text-5xl">{project.title}</h1>

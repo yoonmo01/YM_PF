@@ -34,7 +34,7 @@ export function ProjectStudyMarkdown({ content }: { content: string }) {
       ul: ({ children }) => <ul className="my-4 max-w-[48rem] list-disc space-y-2 pl-6 leading-8 text-muted">{children}</ul>,
       ol: ({ children }) => <ol className="my-4 max-w-[48rem] list-decimal space-y-2 pl-6 leading-8 text-muted">{children}</ol>,
       blockquote: ({ children }) => <blockquote className="my-6 border-l-2 border-accent pl-5 text-ink">{children}</blockquote>,
-      table: ({ children }) => <div className="my-6 overflow-x-auto"><table className="w-full min-w-[32rem] border-collapse text-left text-sm leading-6">{children}</table></div>,
+      table: ({ children }) => <div className="my-6 overflow-x-auto" tabIndex={0}><table className="w-full min-w-[32rem] border-collapse text-left text-sm leading-6">{children}</table></div>,
       th: ({ children }) => <th className="border-b border-line bg-surface px-3 py-2 font-semibold">{children}</th>,
       td: ({ children }) => <td className="border-b border-line px-3 py-2 align-top text-muted">{children}</td>,
       pre: ({ children }) => {
@@ -42,7 +42,7 @@ export function ProjectStudyMarkdown({ content }: { content: string }) {
         if (isValidElement(code) && code.props.className === "language-mermaid") {
           return <MermaidDiagram source={String(code.props.children)} />;
         }
-        return <pre className="my-6 overflow-x-auto rounded-md border border-line bg-surface p-4 text-sm leading-6">{children}</pre>;
+        return <pre className="my-6 overflow-x-auto rounded-md border border-line bg-surface p-4 text-sm leading-6" tabIndex={0}>{children}</pre>;
       },
       img: ({ src, alt }) => {
         const size = typeof src === "string" ? imageSizes[src] : undefined;

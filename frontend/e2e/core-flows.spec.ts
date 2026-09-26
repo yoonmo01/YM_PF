@@ -7,15 +7,16 @@ test("public portfolio is accessible and responsive", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1, name: "양윤모" })).toBeVisible();
   await expect(page.getByRole("navigation", { name: "주 메뉴" })).toBeVisible();
   await expect(page.getByRole("link", { name: "관리자" })).toHaveCount(0);
-  await expect(page.getByRole("link", { name: "VishBox v2" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "수상", exact: true })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "연구 활동·학력" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "VishBox v2", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Experience" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Awards" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Papers" })).toBeVisible();
   await assertNoHorizontalOverflow(page);
   await assertNoSeriousAccessibilityViolations(page);
 
   await page.getByRole("link", { name: "프로젝트", exact: true }).click();
   await expect(page.getByRole("heading", { level: 1, name: "프로젝트" })).toBeVisible();
-  await expect(page.getByRole("status")).toHaveText("6개 프로젝트");
+  await expect(page.getByRole("link", { name: "POLYSTEP" })).toBeVisible();
   await assertNoHorizontalOverflow(page);
 });
 

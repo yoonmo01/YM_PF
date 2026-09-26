@@ -37,6 +37,7 @@ export const portfolio = {
       "AI가 내놓은 답을 사용자가 이해하고 검토할 수 있는 시스템에 관심이 있습니다. 대화 시뮬레이션, 문서 분류와 번역, 내부정보 보안 점검 프로젝트에서 데이터 파이프라인과 백엔드 기능을 구현했습니다. 문제 정의부터 검증과 배포까지 이어지는 AI Agent · Backend Engineer를 지향합니다.",
     email: "coolalex127@gmail.com",
     githubUrl: "https://github.com/yoonmo01",
+    linkedinUrl: "https://www.linkedin.com/in/yoonmo-yang/",
   },
   projects: [
     {
@@ -155,11 +156,22 @@ export const portfolio = {
     { institution: "한림대학교", program: "빅데이터학과 · 스마트IoT 복수전공", period: "2020.03–2027.02 (졸업 예정)" },
   ],
   publications: [
+    { title: "VishBox: An AI-Agent-Based Adaptive Voice Phishing Simulation Framework for Cybersecurity Education", venue: "IEEE Access, 14, 39672–39686", date: "2026", url: "https://doi.org/10.1109/ACCESS.2026.3667823" },
     { title: "VishBox v2: A Multi-Agent System for Adaptive Voice Phishing Simulation", venue: "ACL 2026 Industry Track", date: "2026.07", url: "https://aclanthology.org/2026.acl-industry.145/" },
   ],
   awards: [
+    { title: "2026 강원권 AI·SW 페스티벌 포스터 발표 특별상", issuer: "강원권 AI·SW 페스티벌", date: "2026.09.17" },
+    { title: "2026-1학기 학기우등", issuer: "한림대학교", date: "2026-1학기" },
     { title: "2026년 1학기 SW캡스톤디자인 경진대회 동상", issuer: "한림대학교 SW중심대학사업단", date: "2026.06.05" },
+    { title: "2025 SW인재페스티벌 우수작품경진대회 인기상", issuer: "2025 SW인재페스티벌", date: "2025" },
+    { title: "2025-2학기 학기우등", issuer: "한림대학교", date: "2025-2학기" },
     { title: "2025 강원 SW중심대학 프롬프톤 대회 종합우수상", issuer: "한림대학교 SW중심대학사업단", date: "2025.08.27" },
   ],
-  skills: ["AI Agent", "Backend", "Data Pipeline", "Document Processing", "LLM"],
+  skillGroups: [
+    { name: "AI / Data", skills: ["LangGraph", "MCP", "ReAct", "HMM", "MinerU"] },
+    { name: "Backend", skills: ["Python", "FastAPI", "SQLAlchemy", "Pydantic"] },
+    { name: "Frontend", skills: ["React", "TypeScript", "Electron"] },
+    { name: "Database", skills: ["PostgreSQL", "Qdrant", "Neo4j"] },
+    { name: "Infrastructure", skills: ["Docker", "AWS S3", "Git"] },
+  ],
 };

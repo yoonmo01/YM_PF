@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { vi } from "vitest";
 
 import AboutPage from "./about/page";
@@ -15,7 +15,7 @@ it("renders the public pages from local content without a public API request", a
 
   const { unmount } = render(<HomePage />);
   expect(screen.getByRole("heading", { level: 1, name: "양윤모" })).toBeInTheDocument();
-  expect(screen.getAllByRole("link", { name: /VishBox v2|판결문 번역|공공 감사|AUTH/ })).toHaveLength(4);
+  expect(within(screen.getByRole("region", { name: "Projects" })).getAllByRole("link", { name: /VishBox v2|판결문 번역|공공 감사|AUTH/ })).toHaveLength(4);
   expect(screen.queryByRole("link", { name: "관리자" })).not.toBeInTheDocument();
   unmount();
 
