@@ -16,7 +16,7 @@ export function AboutContent({ locale = "ko" }: { locale?: "ko" | "en" }) {
       <section><h2 className="text-2xl font-semibold">{en ? "Awards" : "수상"}</h2><ul className="mt-5 space-y-5">{data.awards.map((award) => <li key={award.title}><p className="font-semibold">{award.title}</p><p className="mt-1 text-sm text-muted">{award.issuer} · {award.date}</p></li>)}</ul></section>
       <section><h2 className="text-2xl font-semibold">{en ? "Papers" : "논문"}</h2><ul className="mt-5 space-y-5">{data.publications.map((paper) => <li key={paper.url}><a className="font-semibold text-accent-strong underline underline-offset-4" href={paper.url} rel="noreferrer" target="_blank">{paper.title}</a><p className="mt-2 text-sm text-muted">{paper.venue} · {paper.date}</p></li>)}</ul></section>
     </div>
-    <section className="mt-12 border-t border-line pt-10"><h2 className="text-2xl font-semibold">Skills</h2><div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{data.skillGroups.map((group) => <div key={group.name}><h3 className="font-semibold text-accent-strong">{group.name}</h3><p className="mt-2 text-sm leading-7 text-muted">{group.skills.join(" · ")}</p></div>)}</div></section>
+    <section className="mt-12 border-t border-line pt-10"><h2 className="text-2xl font-semibold">Skills</h2><div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{data.skillGroups.map((group) => <div key={group.name}><h3 className="font-semibold text-accent-strong">{group.name}</h3><ul className="mt-3 flex flex-wrap gap-2">{group.skills.map((skill) => <li className="rounded-md border border-line bg-surface px-2.5 py-1 text-xs font-medium text-muted" key={skill}>{skill}</li>)}</ul></div>)}</div></section>
   </Container></PublicShell>;
 }
 

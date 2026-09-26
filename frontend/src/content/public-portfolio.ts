@@ -1,7 +1,6 @@
 type ProjectPreview =
-  | { kind: "image"; src: string; alt: string }
-  | { kind: "flow"; steps: string[]; caption: string }
-  | { kind: "metric"; value: string; label: string; detail: string };
+  | { kind: "image"; src: string; alt: string; caption?: string }
+  | { kind: "flow"; steps: string[]; caption: string };
 
 export type PortfolioProject = {
   slug: string;
@@ -47,11 +46,11 @@ export const portfolio = {
       featured: true,
       skills: ["FastAPI", "MCP", "ReAct", "HMM", "PostgreSQL"],
       preview: { kind: "image", src: "/projects/VP2/fig1-architecture.png", alt: "VishBox v2의 Multi-Agent 시스템 구조" },
-      role: "Main Agent·Tool·MCP Dialogue Agent 설계·구현, 실험·논문 작성 참여",
+      role: "Main Agent·호출 Tool 전반·MCP Dialogue Agent 설계·구현",
       caseStudy: {
         problem: "대화 전체의 현실성만으로는 각 대화 단계의 전략과 피해자 상태 변화가 어떻게 이어지는지 살펴보기 어려웠습니다.",
         goal: "절차에 따른 대화 생성과 단계별 상태 분석을 함께 기록해 연구자가 결과를 검토할 수 있도록 합니다.",
-        implementation: "Main Agent와 Tool 호출 흐름을 설계·구현하고, MCP Dialogue Agent 내부를 공격 계획·발화·피해자 응답으로 분리했습니다. Emotion Tool에서 감정 8종을 HMM 입력 4종으로 매핑하고 Agent에 전달하는 상태 출력을 축약했습니다.",
+        implementation: "Main Agent와 호출 Tool 전반을 설계·구현하고, MCP Dialogue Agent를 공격 계획·발화·피해자 응답으로 분리했습니다. Emotion Tool에서 감정 8종을 HMM 입력 4종으로 매핑하고, Guidance Tool에 감정 값을 반영했으며 라운드 판정 Tool에서 감정 기반 취약점을 추출했습니다. Agent에 전달하는 상태 출력은 최종 값 중심으로 축약했습니다.",
         limitations: "특정 사칭 유형을 다룬 합성 대화 연구입니다. 평가 수치는 팀 전체 시스템의 결과이며 개인 구현 범위와 구분합니다.",
         reflection: "최종 대화뿐 아니라 어떤 단계와 상태를 거쳐 결과가 만들어졌는지 기록하는 것이 중요했습니다.",
       },
@@ -64,11 +63,11 @@ export const portfolio = {
       featured: true,
       skills: ["FastAPI", "PostgreSQL", "MinerU", "Gemma4", "TranslateGemma", "Docker"],
       preview: { kind: "flow", steps: ["MinerU", "Gemma4", "TranslateGemma"], caption: "PDF 추출 → 문맥 생성 → 번역" },
-      role: "프론트엔드·MinerU 블록 검수 화면·GPU 작업 큐 및 상태 표시",
+      role: "프론트엔드 전체·번역 모델 선정과 연동·GPU 작업 관리",
       caseStudy: {
         problem: "PDF 추출 과정에서 생긴 오류와 블록 단위 번역의 문맥 단절, 공용 GPU 작업의 경합을 다뤄야 했습니다.",
         goal: "문서 추출부터 번역 결과 검수와 실패 작업 재시도까지 이어지는 흐름을 제공합니다.",
-        implementation: "Marker-pdf의 문서 구조화 문제를 겪은 뒤 MinerU로 교체했습니다. 블록 좌표로 원본 PDF·추출문·번역문을 대조하고 병합·분리 검수를 구현했습니다. 연구실 GPU의 작업 경합을 큐로 관리하고 예약·모델 상태를 화면에 표시했습니다.",
+        implementation: "Marker-pdf의 문서 구조화 문제를 겪은 뒤 MinerU로 교체하고 블록 좌표로 원본 PDF·추출문·번역문 대조, 병합·분리 검수 화면을 구현했습니다. TranslateGemma를 번역 모델로 선정·연결하고 실시간 진행률 표시와 실패 작업 재시도를 구현했습니다. 연구실 GPU 작업 큐와 예약·모델 상태 표시도 구축했습니다.",
         limitations: "번역 정확도, 식별자 보존율과 처리 속도에 대한 정량 평가는 공개 자료에서 확인되지 않았습니다. 전체 시스템을 완전 오프라인으로 표현하지 않습니다.",
         reflection: "번역 모델뿐 아니라 추출 품질, 검수 흐름과 공유 자원의 관리가 결과에 영향을 줍니다.",
       },
@@ -80,7 +79,7 @@ export const portfolio = {
       summary: "공개 감사 결과 약 1만 5천 건을 AI로 분류하고 검색과 통계로 살펴보는 업무 지원 시스템",
       featured: false,
       skills: ["FastAPI", "PostgreSQL", "GPT-4.1-mini", "AWS S3", "React"],
-      preview: { kind: "metric", value: "약 1만 5천 건", label: "공개 감사 결과 분류·조회 구축 규모", detail: "분류 일치율은 선별된 136건 표본에서 별도 평가" },
+      preview: { kind: "image", src: "/projects/AUDIT/audit-viewer.png", alt: "공공 감사 결과 조회 서비스의 검색 조건 화면", caption: "공개 감사 결과 약 1만 5천 건 구축" },
       role: "3단계 분류 프롬프트·FastAPI 조회 서비스·AWS 배포·기관 협의 및 인계",
       period: "2025.07–2026.01",
       teamSize: 3,
@@ -99,14 +98,14 @@ export const portfolio = {
       summary: "직원 동의와 소명 절차를 포함한 Multi-Agent 기반 내부정보 보안 자가점검 앱",
       featured: true,
       skills: ["LangGraph", "FastAPI", "PostgreSQL", "Qdrant", "Neo4j", "Electron"],
-      preview: { kind: "metric", value: "3/3", label: "가상환경 모의 시나리오 예상 위험 등급 일치", detail: "Agent 분석 구간 약 8분 → 2~3분 (측정)" },
-      role: "팀 대표·3종 DB ETL·Agent 전체 설계·3개 분석 Agent·VM 검증 시나리오",
+      preview: { kind: "image", src: "/projects/AUTH/system-flow.svg", alt: "AUTH 증거 수집부터 에이전트 분석과 소명까지의 시스템 흐름", caption: "VM 모의 시나리오 3/3 일치 · Agent 분석 8분 → 2~3분 (측정)" },
+      role: "팀장·발표·3종 DB ETL·Agent 시스템 설계와 주요 분석 Agent 구현",
       period: "2026.03–2026.06",
       teamSize: 3,
       caseStudy: {
         problem: "다양한 파일을 분석하는 기능과 함께 직원 동의, 근거 확인, 잘못된 판단에 대한 소명 절차가 필요했습니다.",
         goal: "분석 과정과 근거를 살펴보고 소명 및 관리자 검토로 이어지는 흐름을 제공합니다.",
-        implementation: "CTF C드라이브 데이터를 PostgreSQL·Qdrant·Neo4j로 적재하는 ETL과 Agent 전체 구조를 설계·구현했습니다. 기준선·행동 분석·반증 Agent를 구현하고 VM에서 모의 시나리오 3건을 구축해 검증했습니다.",
+        implementation: "CTF C드라이브 데이터를 PostgreSQL·Qdrant·Neo4j로 적재하는 ETL과 Agent 전체 구조를 설계·구현했습니다. 기준선·행동 분석·반증 Agent를 구현하고 VM에서 모의 시나리오 3건을 구축해 검증했습니다. 팀장으로 발표 자료와 발표를 맡았습니다.",
         limitations: "위험 등급 일치는 가상환경에서 구성한 모의 시나리오 3개에 한정됩니다. 일부 AI 처리에는 외부 API가 사용됩니다.",
         reflection: "분석 결과 자체뿐 아니라 근거를 검토하고 이의를 제기할 수 있는 절차도 제품 흐름에 포함해야 합니다.",
       },
@@ -136,13 +135,13 @@ export const portfolio = {
       featured: false,
       skills: ["FastAPI", "PostgreSQL", "Playwright", "Gemini", "React"],
       preview: { kind: "image", src: "/projects/POLYSTEP/fig3-home.png", alt: "POLYSTEP 정책 검색 서비스 첫 화면" },
-      role: "팀장·정책 검증 파이프라인·백엔드·Playwright/browser-use 구현",
+      role: "팀장·백엔드·정책 검증 파이프라인·발표 자료·발표",
       period: "2025.09–2025.12",
       teamSize: 4,
       caseStudy: {
         problem: "여러 기관의 정책 공고는 변경되거나 종료될 수 있어 검색 결과만으로 신청 가능 여부를 확인하기 어려웠습니다.",
         goal: "사용자 조건 검색 결과에서 공고 원문과 검증 상태를 확인할 수 있도록 합니다.",
-        implementation: "수집된 정책을 정규화·검증하는 파이프라인과 백엔드 시스템을 설계·구현했습니다. Playwright와 browser-use로 공고 원문을 방문·대조하고 검증 상태와 실패 사유를 제공했습니다.",
+        implementation: "수집된 정책을 정규화·검증하는 파이프라인과 백엔드 시스템을 설계·구현했습니다. Playwright와 browser-use로 공고 원문을 방문·대조하고 검증 상태와 실패 사유를 제공했습니다. 팀장으로 발표 자료 제작과 발표를 맡았습니다.",
         limitations: "원문 검증 성공이 개인의 신청 자격을 확정하지 않습니다. 수집 건수와 운영 여부는 당시 자료를 추가 확인한 뒤 공개합니다.",
         reflection: "검색 결과에서 실제 신청 원문으로 이어지는 흐름을 기준으로 기능 범위를 정했습니다.",
       },

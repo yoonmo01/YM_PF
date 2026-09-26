@@ -47,7 +47,7 @@ export function HomeContent({ locale = "ko" }: { locale?: "ko" | "en" }) {
     </Container></section>
     <section className="border-t border-line py-12 sm:py-16" aria-labelledby="skills-title"><Container>
       <h2 className={titleClass} id="skills-title">Skills</h2>
-      <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{data.skillGroups.map((group) => <div key={group.name}><h3 className="text-sm font-semibold text-accent-strong">{group.name}</h3><p className="mt-2 text-sm leading-7 text-muted">{group.skills.join(" · ")}</p></div>)}</div>
+      <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{data.skillGroups.map((group) => <div key={group.name}><h3 className="text-sm font-semibold text-accent-strong">{group.name}</h3><ul className="mt-3 flex flex-wrap gap-2">{group.skills.map((skill) => <li className="rounded-md border border-line bg-surface px-2.5 py-1 text-xs font-medium text-muted" key={skill}>{skill}</li>)}</ul></div>)}</div>
     </Container></section>
     <section className="border-t border-line bg-[#e3f1ed] py-12 sm:py-16"><Container><h2 className={titleClass}>{en ? "Let's talk." : "함께 이야기해요."}</h2><p className="mt-3 text-sm leading-7 text-muted">{en ? "I'm open to conversations about projects and collaboration." : "프로젝트와 협업에 관한 이야기를 기다립니다."}</p><a className="mt-5 inline-flex min-h-11 items-center rounded-md bg-ink px-5 text-sm font-semibold text-white hover:bg-accent-strong" href={`mailto:${data.profile.email}`}>{data.profile.email} ↗</a></Container></section>
   </PublicShell>;

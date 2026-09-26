@@ -37,7 +37,23 @@ describe("public portfolio content", () => {
 
   it("gives each project an approved visual or evidence preview", () => {
     expect(portfolio.projects.map(({ preview }) => preview?.kind)).toEqual([
-      "image", "flow", "metric", "metric", "image", "image",
+      "image", "flow", "image", "image", "image", "image",
     ]);
+  });
+
+  it("describes the confirmed ownership without claiming every team contribution", () => {
+    const legal = portfolio.projects.find(({ slug }) => slug === "legal-translation-review")!;
+    expect(legal.role).toMatch(/프론트엔드.*번역.*GPU/);
+    expect(legal.caseStudy.implementation).toMatch(/TranslateGemma.*진행률.*재시도/);
+
+    const auth = portfolio.projects.find(({ slug }) => slug === "auth-security-audit")!;
+    expect(auth.role).toMatch(/팀장.*발표/);
+    expect(auth.caseStudy.implementation).toMatch(/기준선.*행동 분석.*반증/);
+
+    const polystep = portfolio.projects.find(({ slug }) => slug === "polystep")!;
+    expect(polystep.role).toMatch(/팀장.*발표 자료.*발표/);
+
+    const vishbox = portfolio.projects.find(({ slug }) => slug === "vishbox-v2")!;
+    expect(vishbox.caseStudy.implementation).toMatch(/Guidance.*판정.*취약점/);
   });
 });

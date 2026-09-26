@@ -27,11 +27,11 @@ export default async function ProjectDetailPage({ params }: Props) {
   const study = readFileSync(join(process.cwd(), "src", "content", "project-studies", `${project.slug}.md`), "utf8");
 
   return <PublicShell alternateHref={`/en/projects/${slug}`}><Container className="py-12 sm:py-16"><article>
-    <header className="max-w-[48rem]">
+    <header>
     <ul className="flex flex-wrap gap-x-4 gap-y-2 text-sm font-medium text-accent-strong">{project.skills.map((skill) => <li key={skill}>{skill}</li>)}</ul>
-    <h1 className="mt-5 text-4xl font-semibold leading-tight tracking-[-0.04em] sm:text-5xl">{project.title}</h1>
-    <p className="mt-5 text-lg leading-8 text-muted">{project.summary}</p>
-    {(project.role || project.period || project.teamSize) && <dl className="mt-9 grid gap-4 border-y border-line py-5 text-sm sm:grid-cols-3">
+    <h1 className="mt-5 max-w-[48rem] text-4xl font-semibold leading-tight tracking-[-0.04em] sm:text-5xl">{project.title}</h1>
+    <p className="mt-5 max-w-[48rem] text-lg leading-8 text-muted">{project.summary}</p>
+    {(project.role || project.period || project.teamSize) && <dl className="mt-9 grid gap-x-8 gap-y-4 border-y border-line py-5 text-sm sm:grid-cols-[minmax(0,1fr)_auto_auto]">
       {project.role && <Meta label="역할" value={project.role} />}{project.period && <Meta label="기간" value={project.period} />}{project.teamSize && <Meta label="인원" value={`${project.teamSize}명`} />}
     </dl>}
     </header>

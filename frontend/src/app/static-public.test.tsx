@@ -46,12 +46,14 @@ it("shows research, education, awards, and the verified publication on the about
   expect(screen.getByRole("link", { name: /coolalex127@gmail.com/ })).toHaveAttribute("href", "mailto:coolalex127@gmail.com");
 });
 
-it("shows project evidence previews without invented screenshots", () => {
+it("shows project evidence previews from verified screens and architecture", () => {
   render(<ProjectsPage />);
   expect(screen.getByRole("img", { name: "VishBox v2의 Multi-Agent 시스템 구조" })).toBeInTheDocument();
   expect(screen.getByText("PDF 추출 → 문맥 생성 → 번역")).toBeInTheDocument();
-  expect(screen.getByText("약 1만 5천 건")).toBeInTheDocument();
-  expect(screen.getByText("가상환경 모의 시나리오 예상 위험 등급 일치")).toBeInTheDocument();
+  expect(screen.getByRole("img", { name: "공공 감사 결과 조회 서비스의 검색 조건 화면" })).toBeInTheDocument();
+  expect(screen.getByRole("img", { name: "AUTH 증거 수집부터 에이전트 분석과 소명까지의 시스템 흐름" })).toBeInTheDocument();
+  expect(screen.getByText("공개 감사 결과 약 1만 5천 건 구축")).toBeInTheDocument();
+  expect(screen.getByText("VM 모의 시나리오 3/3 일치 · Agent 분석 8분 → 2~3분 (측정)")).toBeInTheDocument();
   expect(screen.getByRole("img", { name: "POLYSTEP 정책 검색 서비스 첫 화면" })).toBeInTheDocument();
 });
 

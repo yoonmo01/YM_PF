@@ -18,11 +18,15 @@ const imageSizes: Record<string, [number, number]> = {
   "/projects/POLYSTEP/fig2-core-features.png": [1613, 908],
   "/projects/POLYSTEP/fig3-home.png": [2446, 1226],
   "/projects/POLYSTEP/fig4-graph.png": [1790, 973],
+  "/projects/AUDIT/audit-viewer.png": [1285, 420],
+  "/projects/AUTH/system-flow.svg": [720, 500],
 };
 const openingImages = new Set([
   "/projects/VP2/fig1-architecture.png",
   "/projects/VP/fig1-architecture.png",
   "/projects/POLYSTEP/fig3-home.png",
+  "/projects/AUDIT/audit-viewer.png",
+  "/projects/AUTH/system-flow.svg",
 ]);
 
 export function ProjectStudyMarkdown({ content }: { content: string }) {

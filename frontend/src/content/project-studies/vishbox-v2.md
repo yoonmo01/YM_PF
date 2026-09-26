@@ -2,11 +2,11 @@
 
 [ACL 2026 Industry Track 논문](https://aclanthology.org/2026.acl-industry.145/) · 후속 연구의 기반인 [VishBox v1](https://github.com/yoonmo01/VP)
 
-## 내가 구현한 부분
+## 담당 범위와 구현
 
-- **Main Agent와 Tool 흐름:** 시뮬레이션을 조율하는 Main Agent를 설계·구현하고, 프롬프트 구성 → MCP 대화 실행 → 감정 라벨링 → 라운드 판정에 쓰이는 Tool들을 연결했습니다.
+- **Main Agent와 Tool:** 시뮬레이션을 조율하는 Main Agent와 이 Agent가 호출하는 Tool 전반을 설계·구현했습니다. 프롬프트 구성, MCP 대화 실행, 감정 라벨링, Guidance 생성과 라운드 판정이 이어지도록 구성했습니다.
 - **MCP Dialogue Agent:** 공격자의 절차 계획(Planner)과 실제 발화(Realizer), 피해자 응답을 분리해 대화가 단계별로 진행되도록 구현했습니다.
-- **Emotion Tool:** Hugging Face의 HowRU-KoELECTRA가 출력하는 감정 8종을 HMM 입력 4종으로 매핑했습니다. ‘놀라움’은 발화의 위협·거부 단서에 따라 처리하고, 변환한 감정 시퀀스로 피해자 상태를 추정했습니다.
+- **감정·판정 Tool:** Hugging Face의 HowRU-KoELECTRA가 출력하는 감정 8종을 HMM 입력 4종으로 매핑했습니다. ‘놀라움’은 발화의 위협·거부 단서에 따라 처리하고, 변환한 감정 시퀀스로 피해자 상태를 추정했습니다. Guidance Tool에는 감정 값을 반영하고, 라운드 판정 Tool에서는 감정에 따른 취약점을 추출해 Main Agent가 다음 진행에 활용하도록 했습니다.
 - **Agent 입력 안정화:** 감정 예측과 HMM의 중간 결과를 Agent에 모두 전달할 때 JSON 출력이 깨지는 문제가 있어, 전달 결과를 최종 상태 중심으로 축약했습니다.
 
 아래 실험 결과는 **팀 전체 시스템의 결과**입니다. Tactic Search Agent를 포함한 전체 구조와 제가 직접 구현한 범위를 구분해 설명합니다.
