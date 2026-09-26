@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import { vi } from "vitest";
 import { renderWithQueryClient } from "@/test/render-with-query-client";
 import Home from "./page";
@@ -13,6 +13,7 @@ describe("Home", () => {
     renderWithQueryClient(<Home />);
 
     expect(screen.getByRole("heading", { level: 1, name: "양윤모" })).toBeInTheDocument();
+    expect(within(screen.getByRole("main")).getByText("AX Engineer · AI Agent Engineer · Backend Engineer")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "VishBox v2" })).toHaveAttribute("href", "/projects/vishbox-v2");
     expect(screen.getByRole("link", { name: "GitHub" })).toHaveAttribute("href", "https://github.com/yoonmo01");
     expect(screen.getByRole("link", { name: "LinkedIn" })).toHaveAttribute("href", "https://www.linkedin.com/in/yoonmo-yang/");
@@ -27,7 +28,7 @@ describe("Home", () => {
       expect(first.compareDocumentPosition(next) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     }
     expect(screen.getByText("2026년 1학기 SW캡스톤디자인 경진대회 동상")).toBeInTheDocument();
-    expect(screen.getByText("한림대학교 지능형 의사결정시스템 연구실")).toBeInTheDocument();
+    expect(screen.getByText("한림대학교 지능형 의사결정시스템 연구실 (LIT LAB)")).toBeInTheDocument();
     expect(screen.getByRole("navigation", { name: "주 메뉴" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^KO/ })).toHaveAttribute("href", "/en");
     expect(screen.queryByRole("link", { name: "관리자" })).not.toBeInTheDocument();

@@ -15,7 +15,9 @@ it("renders the public pages from local content without a public API request", a
 
   const { unmount } = render(<HomePage />);
   expect(screen.getByRole("heading", { level: 1, name: "양윤모" })).toBeInTheDocument();
-  expect(within(screen.getByRole("region", { name: "Projects" })).getAllByRole("link", { name: /VishBox v2|판결문 번역|공공 감사|AUTH/ })).toHaveLength(4);
+  expect(within(screen.getByRole("region", { name: "Projects" })).getAllByRole("heading", { level: 3 }).map(({ textContent }) => textContent)).toEqual([
+    "VishBox v2", "판결문 번역·검수 시스템", "AUTH",
+  ]);
   expect(screen.queryByRole("link", { name: "관리자" })).not.toBeInTheDocument();
   unmount();
 
@@ -32,7 +34,7 @@ it("renders the public pages from local content without a public API request", a
 
 it("shows research, education, awards, and the verified publication on the about page", () => {
   const { unmount } = render(<AboutPage />);
-  expect(screen.getByText(/AI가 내놓은 답을 사용자가/)).toBeInTheDocument();
+  expect(screen.getByText(/업무의 병목을 찾아/)).toBeInTheDocument();
   expect(screen.getByRole("heading", { name: "연구 활동" })).toBeInTheDocument();
   expect(screen.getByRole("heading", { name: "학력" })).toBeInTheDocument();
   expect(screen.getByRole("heading", { name: "수상" })).toBeInTheDocument();

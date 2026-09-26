@@ -18,7 +18,7 @@ test("static public pages work without API calls at desktop and mobile widths", 
   });
 
   await page.goto("/");
-  await expect(page).toHaveTitle("양윤모 | AI Agent · Backend Engineer");
+  await expect(page).toHaveTitle("양윤모 | AX Engineer · AI Agent · Backend Engineer");
   await expect(page.getByRole("heading", { level: 1, name: "양윤모" })).toBeVisible();
   await expect(page.getByRole("link", { name: "관리자" })).toHaveCount(0);
   if (testInfo.project.name === "chromium" || testInfo.project.name === "narrow-mobile-chromium") {
@@ -32,9 +32,10 @@ test("static public pages work without API calls at desktop and mobile widths", 
   await expect(skipLink).toHaveCSS("outline-style", "solid");
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/#main-content$/);
-  for (const [slug, title] of projects.slice(0, 4)) {
+  for (const [slug, title] of [projects[0], projects[1], projects[3]]) {
     await expect(page.getByRole("link", { name: title, exact: true })).toHaveAttribute("href", `/projects/${slug}`);
   }
+  await expect(page.getByRole("heading", { name: "공공 감사 데이터 AI 분류·조회 시스템" })).toHaveCount(0);
   await assertNoHorizontalOverflow(page);
   await assertNoSeriousAccessibilityViolations(page);
   await page.goto("/projects");

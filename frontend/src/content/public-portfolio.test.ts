@@ -1,10 +1,12 @@
 import { portfolio } from "@/content/public-portfolio";
 
 describe("public portfolio content", () => {
-  it("contains six uniquely identified projects with four featured projects", () => {
+  it("contains six uniquely identified projects with three featured projects", () => {
     expect(portfolio.projects).toHaveLength(6);
     expect(new Set(portfolio.projects.map(({ slug }) => slug)).size).toBe(6);
-    expect(portfolio.projects.filter(({ featured }) => featured)).toHaveLength(4);
+    expect(portfolio.projects.filter(({ featured }) => featured).map(({ slug }) => slug)).toEqual([
+      "vishbox-v2", "legal-translation-review", "auth-security-audit",
+    ]);
   });
 
   it("includes the minimum case-study copy and confirmed public GitHub links", () => {
@@ -24,7 +26,7 @@ describe("public portfolio content", () => {
     expect(portfolio.awards.map(({ title }) => title)).toContain("2025 SW인재페스티벌 우수작품경진대회 인기상");
     expect(portfolio.awards.map(({ title }) => title)).toContain("2025-2학기 학기우등");
     expect(portfolio.awards.map(({ title }) => title)).toContain("2026-1학기 학기우등");
-    expect(portfolio.experiences[0].organization).toBe("한림대학교 지능형 의사결정시스템 연구실");
+    expect(portfolio.experiences[0].organization).toBe("한림대학교 지능형 의사결정시스템 연구실 (LIT LAB)");
     expect(portfolio.educations[0].institution).toBe("한림대학교");
     expect(portfolio.educations[0].period).toContain("2027.02 (졸업 예정)");
     expect(portfolio.publications.map(({ url }) => url)).toEqual(expect.arrayContaining([

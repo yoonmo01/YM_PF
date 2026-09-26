@@ -7,7 +7,7 @@ import { portfolio } from "@/content/public-portfolio";
 import { portfolioEn } from "@/content/public-portfolio-en";
 import { StaticProjectCard } from "@/features/content/static-project-card";
 
-export const metadata: Metadata = { title: { absolute: `${portfolio.profile.name} | AI Agent · Backend Engineer` }, description: portfolio.profile.shortBio };
+export const metadata: Metadata = { title: { absolute: `${portfolio.profile.name} | AX Engineer · AI Agent · Backend Engineer` }, description: portfolio.profile.shortBio };
 
 export function HomeContent({ locale = "ko" }: { locale?: "ko" | "en" }) {
   const en = locale === "en";
@@ -16,7 +16,7 @@ export function HomeContent({ locale = "ko" }: { locale?: "ko" | "en" }) {
   const titleClass = "text-2xl font-semibold tracking-[-0.035em] sm:text-3xl";
   return <PublicShell locale={locale} alternateHref={en ? "/" : "/en"}>
     <section className="py-10 sm:py-14"><Container>
-      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent-strong">AI Agent Engineer · Backend Engineer</p>
+      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent-strong">AX Engineer · AI Agent Engineer · Backend Engineer</p>
       <h1 className="mt-3 text-4xl font-semibold tracking-[-0.05em] sm:text-6xl">{data.profile.name}</h1>
       <p className="mt-4 max-w-3xl text-xl font-medium leading-8 tracking-[-0.025em] sm:text-2xl">{data.profile.headline}</p>
       <p className="mt-3 max-w-2xl text-sm leading-7 text-muted sm:text-base">{data.profile.shortBio}</p>

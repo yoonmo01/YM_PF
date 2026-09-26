@@ -14,7 +14,7 @@ test("six project studies show their evidence without setup instructions", async
     await page.goto(`/projects/${slug}`);
     await expect(page.getByText(evidence, { exact: false }).first()).toBeVisible();
     if (slug === "public-audit-ai-viewer") {
-      for (const rate of ["88.9%", "86.7%", "47.8%"]) {
+      for (const rate of ["89.0%", "79.4%", "47.8%"]) {
         await expect(page.getByText(rate, { exact: false })).toBeVisible();
       }
     }

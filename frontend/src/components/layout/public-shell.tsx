@@ -23,6 +23,6 @@ export function PublicShell({ children, locale = "ko", alternateHref = "/en" }: 
       </div>
     </Container></header>
     <main id="main-content">{children}</main>
-    <footer className="mt-24 border-t border-line bg-surface py-8 text-sm text-muted"><Container>{en ? "Yoonmo Yang" : "양윤모"} · AI Agent Engineer · Backend Engineer</Container></footer>
+    <footer className="mt-24 border-t border-line bg-surface py-8 text-sm text-muted"><Container>{en ? "Yoonmo Yang" : "양윤모"} · AX Engineer · AI Agent Engineer · Backend Engineer</Container></footer>
   </div>;
 }

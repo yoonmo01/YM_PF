@@ -3,7 +3,7 @@ import { expect, test, type Page, type Route } from "@playwright/test";
 
 test("public portfolio is accessible and responsive", async ({ page }) => {
   await page.goto("/");
-  await expect(page).toHaveTitle("양윤모 | AI Agent · Backend Engineer");
+  await expect(page).toHaveTitle("양윤모 | AX Engineer · AI Agent · Backend Engineer");
   await expect(page.getByRole("heading", { level: 1, name: "양윤모" })).toBeVisible();
   await expect(page.getByRole("navigation", { name: "주 메뉴" })).toBeVisible();
   await expect(page.getByRole("link", { name: "관리자" })).toHaveCount(0);
