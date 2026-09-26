@@ -10,6 +10,20 @@ const projects = [
   ["polystep", "POLYSTEP", "https://github.com/yoonmo01/POLYSTEP"],
 ] as const;
 
+test("home introduction uses the same content width as the other sections", async ({ page }) => {
+  await page.goto("/");
+  const intro = page.locator("main > section").first().locator("p");
+  const availableWidth = await intro.first().evaluate((node) => {
+    const parent = node.parentElement!;
+    const style = getComputedStyle(parent);
+    return parent.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+  });
+  for (const paragraph of [intro.nth(1), intro.nth(2)]) {
+    const width = await paragraph.evaluate((node) => node.getBoundingClientRect().width);
+    expect(Math.abs(width - availableWidth)).toBeLessThan(2);
+  }
+});
+
 test("static public pages work without API calls at desktop and mobile widths", async ({ page }, testInfo) => {
   const apiRequests: string[] = [];
   page.on("request", (request) => {

@@ -70,4 +70,14 @@ test("audit study shows the local data viewer, map, and chart", async ({ page })
     await expect.poll(() => image.evaluate((node) => (node as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
   }
   await expect(page.getByText("캡처에 사용한 JSON과 약 1만 5천 건 구축 규모는 집계 범위가 다릅니다.")).toBeVisible();
+  expect(await page.locator("article").innerText()).not.toContain("crud/map.py");
+});
+
+test("VishBox v1 dialogue diagram fits on screen and opens at full size", async ({ page }) => {
+  await page.goto("/projects/vishbox");
+  const image = page.getByRole("img", { name: "MCP 기반 대화 시뮬레이션 구조" });
+  await image.scrollIntoViewIfNeeded();
+  await expect.poll(() => image.evaluate((node) => (node as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  expect(await image.evaluate((node) => node.getBoundingClientRect().height)).toBeLessThanOrEqual(550);
+  await expect(page.getByRole("link", { name: "MCP 대화 구조 원본 크게 보기" })).toHaveAttribute("href", "/projects/VP/fig2-mcp-dialogue.png");
 });

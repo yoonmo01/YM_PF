@@ -72,7 +72,7 @@ AI가 붙인 라벨이 실무자 판단과 다를 수 있습니다. 한 컬럼�
 | **원문 확인** | 감사 결과 PDF를 화면에서 바로 열람 |
 | **엑셀 다운로드** | 조회 결과를 파일로 내보내기 |
 
-집계는 백엔드에서 처리합니다 (`crud/map.py`의 `get_category_task_summary`, `get_tasks_by_region`).
+백엔드에서 분야·업무별 건수를 집계하고, 화면에서 지역별 지도와 차트로 보여줍니다.
 
 ![공공 감사 결과 조회 조건 화면](/projects/AUDIT/audit-viewer.png)
 

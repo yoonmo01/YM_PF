@@ -53,7 +53,9 @@ export function ProjectStudyMarkdown({ content }: { content: string }) {
       },
       img: ({ src, alt }) => {
         const size = typeof src === "string" ? imageSizes[src] : undefined;
-        return size && typeof src === "string" ? <Image src={src} alt={alt ?? ""} width={size[0]} height={size[1]} loading={openingImages.has(src) ? "eager" : "lazy"} className="my-7 h-auto w-full max-w-full rounded-md border border-line bg-white object-contain" /> : null;
+        if (!size || typeof src !== "string") return null;
+        if (src === "/projects/VP/fig2-mcp-dialogue.png") return <a aria-label="MCP 대화 구조 원본 크게 보기" className="mx-auto my-7 flex w-full max-w-md flex-col items-center gap-3 rounded-md border border-line bg-white p-5 text-xs font-semibold text-accent-strong hover:border-accent focus-visible:outline-2 focus-visible:outline-accent" href={src} rel="noreferrer" target="_blank"><Image src={src} alt={alt ?? ""} width={size[0]} height={size[1]} loading="lazy" className="h-auto max-h-[32rem] w-auto max-w-full object-contain" /><span>원본 크게 보기 ↗</span></a>;
+        return <Image src={src} alt={alt ?? ""} width={size[0]} height={size[1]} loading={openingImages.has(src) ? "eager" : "lazy"} className="my-7 h-auto w-full max-w-full rounded-md border border-line bg-white object-contain" />;
       },
       a: ({ href, children }) => <a href={href} className="text-accent-strong underline underline-offset-4" rel={href?.startsWith("http") ? "noreferrer" : undefined} target={href?.startsWith("http") ? "_blank" : undefined}>{children}</a>,
     }}>{content}</Markdown>

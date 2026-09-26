@@ -18,8 +18,8 @@ export function HomeContent({ locale = "ko" }: { locale?: "ko" | "en" }) {
     <section className="py-10 sm:py-14"><Container>
       <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent-strong">AX Engineer · AI Agent Engineer · Backend Engineer</p>
       <h1 className="mt-3 text-4xl font-semibold tracking-[-0.05em] sm:text-6xl">{data.profile.name}</h1>
-      <p className="mt-4 max-w-3xl text-xl font-medium leading-8 tracking-[-0.025em] sm:text-2xl">{data.profile.headline}</p>
-      <p className="mt-3 max-w-2xl text-sm leading-7 text-muted sm:text-base">{data.profile.shortBio}</p>
+      <p className="mt-4 text-xl font-medium leading-8 tracking-[-0.025em] sm:text-2xl">{data.profile.headline}</p>
+      <p className="mt-3 text-sm leading-7 text-muted sm:text-base">{data.profile.shortBio}</p>
       <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold text-accent-strong">
         <a aria-label="GitHub" className="inline-flex min-h-11 items-center underline decoration-line underline-offset-4 hover:decoration-accent" href={data.profile.githubUrl} rel="noreferrer" target="_blank">GitHub ↗</a>
         <a aria-label="LinkedIn" className="inline-flex min-h-11 items-center underline decoration-line underline-offset-4 hover:decoration-accent" href={data.profile.linkedinUrl} rel="noreferrer" target="_blank">LinkedIn ↗</a>
