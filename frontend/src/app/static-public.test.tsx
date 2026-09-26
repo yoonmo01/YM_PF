@@ -15,6 +15,7 @@ it("renders the public pages from local content without a public API request", a
 
   const { unmount } = render(<HomePage />);
   expect(screen.getByRole("heading", { level: 1, name: "양윤모" })).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: "양윤모 포트폴리오 홈" })).toHaveTextContent("양윤모");
   expect(within(screen.getByRole("region", { name: "Projects" })).getAllByRole("heading", { level: 3 }).map(({ textContent }) => textContent)).toEqual([
     "VishBox v2", "판결문 번역·검수 시스템", "AUTH",
   ]);
@@ -52,8 +53,8 @@ it("shows project evidence previews from verified screens and architecture", () 
   expect(screen.getByText("PDF 추출 → 문맥 생성 → 번역")).toBeInTheDocument();
   expect(screen.getByRole("img", { name: "공공 감사 결과 조회 서비스 첫 화면" })).toBeInTheDocument();
   expect(screen.getByRole("img", { name: "AUTH 증거 수집부터 에이전트 분석과 소명까지의 시스템 흐름" })).toBeInTheDocument();
-  expect(screen.getByText("별도 데이터로 재현한 서비스 화면")).toBeInTheDocument();
-  expect(screen.getByText("VM 모의 시나리오 3/3 일치 · Agent 분석 8분 → 2~3분 (측정)")).toBeInTheDocument();
+  expect(screen.queryByText("별도 데이터로 재현한 서비스 화면")).not.toBeInTheDocument();
+  expect(screen.getByText("직원 동의·소명을 지원하는 Multi-Agent 내부정보 보안 자가점검 시스템")).toBeInTheDocument();
   expect(screen.getByRole("img", { name: "POLYSTEP 정책 검색 서비스 첫 화면" })).toBeInTheDocument();
 });
 

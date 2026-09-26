@@ -1,5 +1,5 @@
 type ProjectPreview =
-  | { kind: "image"; src: string; alt: string; caption?: string }
+  | { kind: "image"; src: string; alt: string }
   | { kind: "flow"; steps: string[]; caption: string };
 
 export type PortfolioProject = {
@@ -79,7 +79,7 @@ export const portfolio = {
       summary: "공개 감사 결과 약 1만 5천 건을 AI로 분류하고 검색과 통계로 살펴보는 업무 지원 시스템",
       featured: false,
       skills: ["FastAPI", "PostgreSQL", "GPT-4.1-mini", "AWS S3", "React"],
-      preview: { kind: "image", src: "/projects/AUDIT/audit-home.png", alt: "공공 감사 결과 조회 서비스 첫 화면", caption: "별도 데이터로 재현한 서비스 화면" },
+      preview: { kind: "image", src: "/projects/AUDIT/audit-home.png", alt: "공공 감사 결과 조회 서비스 첫 화면" },
       role: "3단계 분류 프롬프트·FastAPI 조회 서비스·AWS 배포·기관 협의 및 인계",
       period: "2025.07–2026.01",
       teamSize: 3,
@@ -95,10 +95,10 @@ export const portfolio = {
     {
       slug: "auth-security-audit",
       title: "AUTH",
-      summary: "직원 동의와 소명 절차를 포함한 Multi-Agent 기반 내부정보 보안 자가점검 앱",
+      summary: "직원 동의·소명을 지원하는 Multi-Agent 내부정보 보안 자가점검 시스템",
       featured: true,
       skills: ["LangGraph", "FastAPI", "PostgreSQL", "Qdrant", "Neo4j", "Electron"],
-      preview: { kind: "image", src: "/projects/AUTH/system-flow.svg", alt: "AUTH 증거 수집부터 에이전트 분석과 소명까지의 시스템 흐름", caption: "VM 모의 시나리오 3/3 일치 · Agent 분석 8분 → 2~3분 (측정)" },
+      preview: { kind: "image", src: "/projects/AUTH/system-flow.svg", alt: "AUTH 증거 수집부터 에이전트 분석과 소명까지의 시스템 흐름" },
       role: "팀장·발표·3종 DB ETL·Agent 시스템 설계와 주요 분석 Agent 구현",
       period: "2026.03–2026.06",
       teamSize: 3,
@@ -149,7 +149,7 @@ export const portfolio = {
     },
   ] satisfies PortfolioProject[],
   experiences: [
-    { organization: "한림대학교 지능형 의사결정시스템 연구실 (LIT LAB)", title: "학부연구생", period: "2025.07–현재", description: "Multi-Agent 연구와 AI 시스템의 데이터 처리·백엔드·배포 과제를 수행했습니다." },
+    { organization: "한림대학교 지능형 의사결정시스템 연구실 (LIT LAB)", title: "학부연구생", period: "2025.07–현재", description: "Multi-Agent 연구에서 Agent·Tool을 설계하고, 판결문 번역·검수 프론트엔드와 GPU 작업 관리, 공공 감사 조회 API·배포를 구현했습니다." },
   ],
   educations: [
     { institution: "한림대학교", program: "빅데이터학과 · 스마트IoT 복수전공", period: "2020.03–2027.02 (졸업 예정)" },
